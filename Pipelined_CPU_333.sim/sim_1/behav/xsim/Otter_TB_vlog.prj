@@ -1,0 +1,23 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ALU.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BAG.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BCG.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_DCDR.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_FSM.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ImmediateGenerator.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_MUX.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_REG.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/REG_FILE.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/TwoMux.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv" \
+"../../../../Pipelined_CPU_333.srcs/sources_1/new/Otter_TB.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
