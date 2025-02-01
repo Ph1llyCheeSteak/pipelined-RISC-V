@@ -10,7 +10,7 @@ module PC(
     input logic CLK,
     input logic RST,
     input logic PC_WRITE,
-    input logic [2:0] PC_SOURCE,
+    input logic [2:0] PC_SEL,
     input logic [31:0] JALR,
     input logic [31:0] BRANCH,
     input logic [31:0] JAL,
@@ -29,7 +29,7 @@ module PC(
     
     //Instantiate PC Multiplexer
     PC_MUX PCMUX(.PC_OUT_PLUS_FOUR(PC_OUT_PLUS_FOUR), .JALR(JALR), .BRANCH(BRANCH),
-     .JAL(JAL), .MTVEC(MTVEC), .MEPC(MEPC), .PC_SOURCE(PC_SOURCE), .PC_MUX_OUT(PC_IN));
+     .JAL(JAL), .MTVEC(MTVEC), .MEPC(MEPC), .PC_SEL(PC_SEL), .PC_MUX_OUT(PC_IN));
     
     //Instantiate PC Register
     PC_REG PCREG(.CLK(CLK), .RST(RST), .D(PC_WRITE), .IN(PC_IN), .OUT(PC_OUT));
