@@ -1,0 +1,15 @@
+#-----------------------------------------------------------
+# Vivado v2023.1.1 (64-bit)
+# SW Build 3900603 on Fri Jun 16 19:31:24 MDT 2023
+# IP Build 3900379 on Sat Jun 17 05:28:05 MDT 2023
+# SharedData Build 3899622 on Fri Jun 16 03:34:24 MDT 2023
+# Start of session at: Sat Feb  1 15:36:25 2025
+# Process ID: 35180
+# Current directory: C:/Users/pbakh/cloned_repos/pipelined-RISC-V
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent3728 C:\Users\pbakh\cloned_repos\pipelined-RISC-V\Pipelined_CPU_333.xpr
+# Log file: C:/Users/pbakh/cloned_repos/pipelined-RISC-V/vivado.log
+# Journal file: C:/Users/pbakh/cloned_repos/pipelined-RISC-V\vivado.jou
+# Running On: Ph1llyCheeSteak, OS: Windows, CPU Frequency: 2995 MHz, CPU Physical cores: 14, Host memory: 34014 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/pbakh/cloned_repos/pipelined-RISC-V/Pipelined_CPU_333.xpr
