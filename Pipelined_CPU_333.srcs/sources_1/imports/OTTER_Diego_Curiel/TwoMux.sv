@@ -7,17 +7,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module TwoMux(
-    input logic ALU_SRC_A,
+    input logic SEL,
     input logic [31:0] RS1,
     input logic [31:0] U_TYPE,
-    output logic [31:0] SRC_A
+    output logic [31:0] OUT
     );
     
     //Create a generic two-to-one MUX to be used for the ALU.
     always_comb begin
-        case(ALU_SRC_A)
-            1'b0: begin SRC_A = RS1; end
-            1'b1: begin SRC_A = U_TYPE; end
+        case(SEL)
+            1'b0: begin OUT = RS1; end
+            1'b1: begin OUT = U_TYPE; end
         endcase
     end
     

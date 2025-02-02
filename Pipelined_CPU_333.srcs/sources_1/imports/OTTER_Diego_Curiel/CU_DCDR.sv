@@ -17,7 +17,12 @@ module CU_DCDR(
     output logic ALU_SRCA,
     output logic [1:0] ALU_SRCB,
     output logic [2:0] PC_SOURCE,
-    output logic [1:0] RF_WR_SEL
+    output logic [1:0] RF_WR_SEL,
+    output logic PC_WRITE, //NEW FROM HERE DOWN
+    output logic REG_WRITE, 
+    output logic MEM_WE2, 
+    output logic MEM_RDEN1, 
+    output logic MEM_RDEN2
     );
     
     //Create always comb clock for decoder logic

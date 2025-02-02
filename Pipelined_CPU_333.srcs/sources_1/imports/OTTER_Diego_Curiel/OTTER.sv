@@ -110,7 +110,7 @@ module OTTER(
     assign opcode = ir[6:0];
     logic [2:0] funct;
     assign funct = ir[14:12]; 
-    
+     
     //Instantiate Decoder, connect all relevant I/O
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), .BR_LT(br_lt),
      .BR_LTU(br_ltu), .ALU_FUN(alu_fun), .ALU_SRCA(alu_src_a), .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_source),
