@@ -36,6 +36,11 @@ module CU_DCDR(
         ALU_SRCB = 2'b00;
         PC_SOURCE = 3'b000;
         RF_WR_SEL = 2'b00;
+        PC_WRITE = 1'b0; 
+        REG_WRITE = 1'b0;
+        MEM_WE2 = 1'b0;
+        MEM_RDEN1 = 1'b1; // ALWAYS HIGH
+        MEM_RDEN2 = 1'b0;
         
         //Case statement depending on the opcode for the 
         //instruction, or the last seven bits of each instruction
@@ -44,51 +49,66 @@ module CU_DCDR(
                 ALU_SRCA = 1'b1;
                 ALU_SRCB = 2'b11;
                 RF_WR_SEL = 2'b11;
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
             end
             7'b1101111: begin // JAL
                 PC_SOURCE = 3'b011;
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
             end
             7'b1100111: begin // JALR
                 PC_SOURCE = 3'b001;
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
             end
             7'b0100011: begin // Store Instructions
                 ALU_SRCB = 2'b10;
+                MEM_WE2 = 1'b1;
+                PC_WRITE = 1'b1;
             end
             7'b0000011: begin // Load Instructions
                 ALU_SRCB = 2'b01;
                 RF_WR_SEL = 2'b10;
+                REG_WRITE = 1'b1; //Previously in WB
+                PC_WRITE = 1'b1; // Previously in WB
+                MEM_RDEN2 = 1'b1;
             end
             7'b0110111: begin // LUI
                 ALU_FUN = 4'b1001;
                 ALU_SRCA = 1'b1;
                 RF_WR_SEL = 2'b11;
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
             end
             7'b0010011: begin // I-Type
                 //set constants for all I-type instructions
                 ALU_SRCB = 2'b01;
                 RF_WR_SEL = 2'b11;
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
                 
                 //Nested case statement
                 //dependent on the function 3 bits
                 case (IR_FUNCT)
-                    3'b000: begin ALU_FUN = 4'b0000; end
-                    3'b001: begin ALU_FUN = 4'b0001; end
-                    3'b010: begin ALU_FUN = 4'b0010; end
-                    3'b011: begin ALU_FUN = 4'b0011; end
-                    3'b100: begin ALU_FUN = 4'b0100; end
-                    3'b101: begin
+                    3'b000: begin ALU_FUN = 4'b0000; end // ADDI
+                    3'b001: begin ALU_FUN = 4'b0001; end // SLLI
+                    3'b010: begin ALU_FUN = 4'b0010; end // SLTI
+                    3'b011: begin ALU_FUN = 4'b0011; end // SLTIU
+                    3'b100: begin ALU_FUN = 4'b0100; end // XORI
+                    3'b101: begin //SRLI or SRAI
                         //nested case statement
                         //dependent on the 30th bit for 
                         //instructions that have the same opcode and 
                         //fucntion 3 bits
                         case(IR_30)
-                            1'b0: begin ALU_FUN = 4'b0101; end
-                            1'b1: begin ALU_FUN = 4'b1101; end
+                            1'b0: begin ALU_FUN = 4'b0101; end //SRLI
+                            1'b1: begin ALU_FUN = 4'b1101; end //SRAI
                             default: begin end
                         endcase
                     end
-                    3'b110: begin ALU_FUN = 4'b0110; end
-                    3'b111: begin ALU_FUN = 4'b0111; end
+                    3'b110: begin ALU_FUN = 4'b0110; end //ORI
+                    3'b111: begin ALU_FUN = 4'b0111; end //ANDI
                 endcase
             end
             7'b0110011: begin // R-Type
@@ -97,6 +117,8 @@ module CU_DCDR(
                 //the 30th bit and the function 3 bits
                 RF_WR_SEL = 2'b11;
                 ALU_FUN = {IR_30, IR_FUNCT};
+                PC_WRITE = 1'b1;
+                REG_WRITE = 1'b1;
             end
             7'b1100011: begin // B-Type
                 //nested case statement dependent on the
@@ -104,6 +126,7 @@ module CU_DCDR(
                 //Because there are six real branch instructions, there
                 //are six pairs of if-else statements in each of six cases
                 //for the branch instructions.
+                PC_WRITE = 1'b1;
                 case(IR_FUNCT)
                     3'b000: begin
                         if (BR_EQ == 1'b1)
