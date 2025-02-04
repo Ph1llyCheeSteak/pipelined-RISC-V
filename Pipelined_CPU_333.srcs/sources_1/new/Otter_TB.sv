@@ -45,7 +45,7 @@ module Otter_TB();
 
     logic clk, intr, rst, wr;
     logic [31:0] in, iobus_out, iobus_addr;
-    OTTER_MCU CPU( .CLK(clk), .IOBUS_IN(in), .RST(rst),
+    OTTER_MCU CPU( .CLK(clk), .IOBUS_IN(in), .RESET(rst),
               .IOBUS_OUT(iobus_out), .IOBUS_ADDR(iobus_addr), .IOBUS_WR(wr) );
     initial begin
     clk = 0;

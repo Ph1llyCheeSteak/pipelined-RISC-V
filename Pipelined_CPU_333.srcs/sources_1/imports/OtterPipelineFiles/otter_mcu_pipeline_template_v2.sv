@@ -49,6 +49,7 @@ typedef struct packed{
     logic [31:0] pc;
     logic [31:0] opA;
     logic [31:0] opB;
+    logic [1:0] pc_source;
 } instr_t;
 
 module OTTER_MCU(input CLK,
@@ -125,7 +126,7 @@ module OTTER_MCU(input CLK,
     assign de_inst.rd_addr = ir[11:7];
     assign de_inst.opcode = OPCODE;
    
-    assign de_inst.rs1_used =   de_inst.rs1 != 0
+    assign de_inst.rs1_used =   de_inst.rs1_addr != 0
                                 && de_inst.opcode != LUI
                                 && de_inst.opcode != AUIPC
                                 && de_inst.opcode != JAL;
@@ -157,8 +158,8 @@ module OTTER_MCU(input CLK,
 	//Instantiate Decoder
 	//[TODO] Move BR_LT, BR_LTU, BR_EQ and their conditions to just 
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
-        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(de_ex_inst.alu_src_a), 
-        .ALU_SRCB(de_ex_inst.alu_src_b), .PC_SOURCE(de_ex_inst.pc_source), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
+        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(alu_src_a), 
+        .ALU_SRCB(alu_src_b), .PC_SOURCE(de_ex_inst.pc_source), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
         .REG_WRITE(reg_wr), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(de_ex_inst.mem_rden));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
