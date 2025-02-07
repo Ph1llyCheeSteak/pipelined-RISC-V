@@ -25,6 +25,31 @@ module CU_DCDR(
     output logic MEM_RDEN2
     );
     
+typedef enum logic [6:0] {
+    AUIPC  = 7'b0010111,
+    JAL    = 7'b1101111,
+    JALR   = 7'b1100111,
+    STORE  = 7'b0100011,
+    LOAD   = 7'b0000011,
+    LUI    = 7'b0110111,
+    I_TYPE = 7'b0010011,
+    R_TYPE = 7'b0110011,
+    B_TYPE = 7'b1100011
+} opcode_t;
+
+typedef enum logic [2:0] {
+    ALU_ADD  = 3'b000,  // ADDI
+    ALU_SLL  = 3'b001,  // SLLI
+    ALU_SLT  = 3'b010,  // SLTI
+    ALU_SLTU = 3'b011,  // SLTIU
+    ALU_XOR  = 3'b100,  // XORI
+    ALU_SRL_SRA  = 3'b101,  // SRLI or SRAI
+    ALU_OR   = 3'b110,  // ORI
+    ALU_AND  = 3'b111   // ANDI
+} alu_t;
+
+
+
     //Create always comb clock for decoder logic
     always_comb begin
         //Instantiate all outputs to 0 so as to avoid
@@ -44,44 +69,44 @@ module CU_DCDR(
         
         //Case statement depending on the opcode for the 
         //instruction, or the last seven bits of each instruction
-        case (IR_OPCODE)
-            7'b0010111: begin // AUIPC
+        case (opcode_t'(IR_OPCODE))
+            AUIPC: begin 
                 ALU_SRCA = 1'b1;
                 ALU_SRCB = 2'b11;
                 RF_WR_SEL = 2'b11;
                 PC_WRITE = 1'b1;
                 REG_WRITE = 1'b1;
             end
-            7'b1101111: begin // JAL
+            JAL: begin 
                 PC_SOURCE = 3'b011;
                 PC_WRITE = 1'b1;
                 REG_WRITE = 1'b1;
             end
-            7'b1100111: begin // JALR
+            JALR: begin 
                 PC_SOURCE = 3'b001;
                 PC_WRITE = 1'b1;
                 REG_WRITE = 1'b1;
             end
-            7'b0100011: begin // Store Instructions
+            STORE: begin 
                 ALU_SRCB = 2'b10;
                 MEM_WE2 = 1'b1;
                 PC_WRITE = 1'b1;
             end
-            7'b0000011: begin // Load Instructions
+            LOAD: begin 
                 ALU_SRCB = 2'b01;
                 RF_WR_SEL = 2'b10;
                 REG_WRITE = 1'b1; //Previously in WB
                 PC_WRITE = 1'b1; // Previously in WB
                 MEM_RDEN2 = 1'b1;
             end
-            7'b0110111: begin // LUI
+            LUI: begin 
                 ALU_FUN = 4'b1001;
                 ALU_SRCA = 1'b1;
                 RF_WR_SEL = 2'b11;
                 PC_WRITE = 1'b1;
                 REG_WRITE = 1'b1;
             end
-            7'b0010011: begin // I-Type
+            I_TYPE: begin 
                 //set constants for all I-type instructions
                 ALU_SRCB = 2'b01;
                 RF_WR_SEL = 2'b11;
@@ -90,13 +115,13 @@ module CU_DCDR(
                 
                 //Nested case statement
                 //dependent on the function 3 bits
-                case (IR_FUNCT)
-                    3'b000: begin ALU_FUN = 4'b0000; end // ADDI
-                    3'b001: begin ALU_FUN = 4'b0001; end // SLLI
-                    3'b010: begin ALU_FUN = 4'b0010; end // SLTI
-                    3'b011: begin ALU_FUN = 4'b0011; end // SLTIU
-                    3'b100: begin ALU_FUN = 4'b0100; end // XORI
-                    3'b101: begin //SRLI or SRAI
+                case (alu_t'(IR_FUNCT))
+                    ALU_ADD: begin ALU_FUN = 4'b0000; end // ADDI
+                    ALU_SLL: begin ALU_FUN = 4'b0001; end // SLLI
+                    ALU_SLT: begin ALU_FUN = 4'b0010; end // SLTI
+                    ALU_SLTU: begin ALU_FUN = 4'b0011; end // SLTIU
+                    ALU_XOR: begin ALU_FUN = 4'b0100; end // XORI
+                    ALU_SRL_SRA: begin //SRLI or SRAI
                         //nested case statement
                         //dependent on the 30th bit for 
                         //instructions that have the same opcode and 
@@ -107,11 +132,11 @@ module CU_DCDR(
                             default: begin end
                         endcase
                     end
-                    3'b110: begin ALU_FUN = 4'b0110; end //ORI
-                    3'b111: begin ALU_FUN = 4'b0111; end //ANDI
+                    ALU_OR: begin ALU_FUN = 4'b0110; end //ORI
+                    ALU_AND: begin ALU_FUN = 4'b0111; end //ANDI
                 endcase
             end
-            7'b0110011: begin // R-Type
+            R_TYPE: begin 
                 //set constants for all R-types;
                 //ALU_FUN is just the concatenation of
                 //the 30th bit and the function 3 bits
@@ -120,7 +145,7 @@ module CU_DCDR(
                 PC_WRITE = 1'b1;
                 REG_WRITE = 1'b1;
             end
-            7'b1100011: begin // B-Type
+            B_TYPE: begin 
                 //nested case statement dependent on the
                 //function three bits.
                 //Because there are six real branch instructions, there
