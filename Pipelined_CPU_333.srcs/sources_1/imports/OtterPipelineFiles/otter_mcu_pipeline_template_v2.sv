@@ -41,19 +41,19 @@ module OTTER_MCU(input CLK,
                 output [31:0] IOBUS_ADDR,
                 output logic IOBUS_WR 
 );           
-    wire [31:0] pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal,
-        I_immed, S_immed, U_immed, aluBin, aluAin, aluResult, rfIn, csr_reg, rs1, rs2;
-    
+    wire [31:0] I_immed, S_immed, U_immed, pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal;
     wire [31:0] ir;
    
-    
+    wire [2:0] pc_sel;
     wire br_lt, br_eq, br_ltu;
+    logic [4:0] mem_wb_rd_addr;
 
-    
+    //DEC_INST
     logic [4:0] de_inst_rs1_addr;
     logic [4:0] de_inst_rs2_addr;
     logic [4:0] de_inst_rd_addr;
     logic [6:0] de_inst_opcode;
+    
     //DEC_EX
     logic [31:0] de_ex_pc, de_ex_mem_rden, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
     logic [3:0] de_ex_alu_fun;
@@ -62,6 +62,7 @@ module OTTER_MCU(input CLK,
     logic [31:0] de_ex_rs2_addr;
     logic [31:0] de_ex_rd_addr;
     logic [31:0] de_ex_opcode;
+    
     //EX_MEM
     logic [31:0] ex_mem_rs1_addr;
     logic [31:0] ex_mem_rs2_addr;
@@ -75,11 +76,14 @@ module OTTER_MCU(input CLK,
     assign IOBUS_ADDR = ex_mem_aluRes;
     assign IOBUS_OUT = ex_mem_rs2;
     logic [1:0] ex_mem_rf_wr_sel;
+    
     //MEM_WB
-     logic mem_wb_regWrite;
-     logic mem_wb_mem_addr;
      logic [31:0] mem_data;
      logic [1:0] mem_wb_rf_wr_sel;
+     logic mem_wb_regWrite;
+     logic [1:0] alu_src_b
+     
+     
      
     //Instantiate RegFile Mux, connect all relevant I/O
     logic [31:0] reg_wd; // in wb state
@@ -114,8 +118,8 @@ module OTTER_MCU(input CLK,
         .MEM_WE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(IOBUS_ADDR), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(size),
          .MEM_SIGN(sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data));
     
-     
 //==== Instruction Decode ===========================================
+
     // Logic for Decoder
 	logic ir30;
     assign ir30 = ir[30];
@@ -169,13 +173,13 @@ module OTTER_MCU(input CLK,
     FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
 
 //==== Execute ======================================================
+
     always_ff@(posedge CLK) begin
         ex_mem_pc <= de_ex_pc;
         ex_mem_rs1_addr <= de_ex_rs1_addr;
         ex_mem_rs2_addr <= de_ex_rs2_addr;
         ex_mem_rd_addr <= de_ex_rd_addr;
         ex_mem_opcode <= de_ex_opcode;
-        ex_mem_mem_rden <= de_ex_mem_rden;
         ex_mem_memWrite <= de_ex_memWrite;
         ex_mem_regWrite <= de_ex_regWrite;
         ex_mem_opA <= de_ex_opA;
@@ -197,6 +201,7 @@ module OTTER_MCU(input CLK,
                   .JAL(jal), .JALR(jalr), .BRANCH(branch));
 
 //==== Memory ======================================================
+
     always_ff@(posedge CLK) begin
         mem_wb_regWrite <= ex_mem_regWrite;
         mem_wb_rf_wr_sel <= ex_mem_rf_wr_sel;
