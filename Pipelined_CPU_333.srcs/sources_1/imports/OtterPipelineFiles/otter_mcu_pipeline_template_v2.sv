@@ -47,12 +47,16 @@ module OTTER_MCU(input CLK,
     wire [2:0] pc_sel;
     wire br_lt, br_eq, br_ltu;
     logic [4:0] mem_wb_rd_addr;
+    logic [1:0] rf_wr_sel;
 
     //DEC_INST
     logic [4:0] de_inst_rs1_addr;
     logic [4:0] de_inst_rs2_addr;
     logic [4:0] de_inst_rd_addr;
     logic [6:0] de_inst_opcode;
+    logic [31:0] de_inst_aluRes;
+    logic de_inst_memWrite;
+    logic de_inst_regWrite;
     
     //DEC_EX
     logic [31:0] de_ex_pc, de_ex_mem_rden, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
@@ -62,6 +66,9 @@ module OTTER_MCU(input CLK,
     logic [31:0] de_ex_rs2_addr;
     logic [31:0] de_ex_rd_addr;
     logic [31:0] de_ex_opcode;
+    logic [31:0] de_ex_aluRes;
+    logic de_ex_sign;
+    logic [1:0] de_ex_size;
     
     //EX_MEM
     logic [31:0] ex_mem_rs1_addr;
@@ -73,27 +80,40 @@ module OTTER_MCU(input CLK,
     logic [31:0] ex_mem_aluRes;
     logic [31:0] opA_forwarded;
     logic [31:0] opB_forwarded;
-    assign IOBUS_ADDR = ex_mem_aluRes;
-    assign IOBUS_OUT = ex_mem_rs2;
     logic [1:0] ex_mem_rf_wr_sel;
+    logic ex_mem_sign;
+    logic [1:0] ex_mem_size;
     
     //MEM_WB
      logic [31:0] mem_data;
      logic [1:0] mem_wb_rf_wr_sel;
      logic mem_wb_regWrite;
-     logic [1:0] alu_src_b
+     logic [1:0] alu_src_b;
+     logic [31:0] mem_wb_aluRes;
+     logic [31:0] mem_wb_rs2;
+     logic mem_wb_sign;
+     logic [1:0] mem_wb_size;
+
      
-     
+    assign IOBUS_ADDR = mem_wb_aluRes;
+    assign IOBUS_OUT = ex_mem_rs2;
      
     //Instantiate RegFile Mux, connect all relevant I/O
     logic [31:0] reg_wd; // in wb state
      
 //==== Instruction Fetch ===========================================
-
+//******CONFUSED ABOUT THESE BELOW*******
+    logic sign;
+    logic [1:0] size;
+    logic sign2;
+    logic [1:0] size2;
+    
      logic [31:0] if_de_pc;
      
      always_ff @(posedge CLK) begin //pipeline register
         if_de_pc <= pc;
+        sign <= ir[14];
+        size <= ir[13:12];
      end
      
      assign pcWrite = 1'b1; 	//Hardwired high, assuming now hazards
@@ -107,16 +127,11 @@ module OTTER_MCU(input CLK,
     logic [13:0] addr1;
     assign addr1 = pc[15:2];
     
-//******CONFUSED ABOUT THESE BELOW*******
-    logic sign;
-    assign sign = ir[14]; //before init?
-    logic [1:0] size;
-    assign size = ir[13:12]; // before init ??
     
     // Instantiate the Memory module and connect relevant I/O    
     Memory OTTER_MEMORY(.MEM_CLK(CLK), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(ex_mem_mem_rden), 
-        .MEM_WE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(IOBUS_ADDR), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(size),
-         .MEM_SIGN(sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data));
+        .MEM_WE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(ex_mem_aluRes), .MEM_DIN2(mem_wb_rs2), .MEM_SIZE(ex_mem_size),
+         .MEM_SIGN(ex_mem_sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data));
     
 //==== Instruction Decode ===========================================
 
@@ -147,6 +162,11 @@ module OTTER_MCU(input CLK,
         de_ex_rs2_addr <= de_inst_rs2_addr;
         de_ex_rd_addr <= de_inst_rd_addr;
         de_ex_opcode <= de_inst_opcode;
+        de_ex_aluRes <= de_inst_aluRes; //Boof here down
+        de_ex_memWrite <= de_inst_memWrite;
+        de_ex_regWrite <= de_inst_regWrite;
+        de_ex_memWrite <= sign;
+        de_ex_regWrite <= size;
 	end
 	
 	//Instantiate RegFile
@@ -158,7 +178,7 @@ module OTTER_MCU(input CLK,
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
         .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(de_ex_regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden), .MEM_RDEN2(de_ex_mem_rden), .PC_RST(pc_int));
+        .REG_WRITE(de_inst_regWrite), .MEM_WE2(de_inst_memWrite), .MEM_RDEN1(de_ex_mem_rden), .MEM_RDEN2(de_ex_mem_rden), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -188,10 +208,13 @@ module OTTER_MCU(input CLK,
         ex_mem_rs2 <= de_ex_rs2;
         ex_mem_alu_fun <= de_ex_alu_fun;
         ex_mem_rf_wr_sel <= rf_wr_sel;
+        ex_mem_aluRes <= de_ex_aluRes;
+        ex_mem_sign <= de_ex_sign;
+        ex_mem_size <= de_ex_size;
 	end
 
     // Instantiate ALU
-    ALU OTTER_ALU(.SRC_A(de_ex_inst_opA), .SRC_B(de_ex_inst_opB), .ALU_FUN(de_ex_inst_alu_fun), .RESULT(ex_mem_aluRes));
+    ALU OTTER_ALU(.SRC_A(de_ex_opA), .SRC_B(de_ex_opB), .ALU_FUN(de_ex_alu_fun), .RESULT(de_inst_aluRes));
     
 	//Instantiate Branch Condition Generator
     BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
@@ -205,13 +228,14 @@ module OTTER_MCU(input CLK,
     always_ff@(posedge CLK) begin
         mem_wb_regWrite <= ex_mem_regWrite;
         mem_wb_rf_wr_sel <= ex_mem_rf_wr_sel;
+        mem_wb_rd_addr <= ex_mem_rd_addr;
+        mem_wb_aluRes <= ex_mem_aluRes;
+        mem_wb_rs2 <= ex_mem_rs2;
 	end
      
 //==== Write Back ==================================================
      
-
-
-    FourMux OTTER_REG_MUX(.SEL(mem_wb_rf_wr_sel), .ZERO(pc_next), .ONE(32'b0), .TWO(mem_data), .THREE(IOBUS_ADDR),
+    FourMux OTTER_REG_MUX(.SEL(mem_wb_rf_wr_sel), .ZERO(pc_next), .ONE(32'b0), .TWO(mem_data), .THREE(mem_wb_aluRes),
         .OUT(reg_wd));
        
             
