@@ -22,7 +22,8 @@ module CU_DCDR(
     output logic REG_WRITE, 
     output logic MEM_WE2, 
     output logic MEM_RDEN1, 
-    output logic MEM_RDEN2
+    output logic MEM_RDEN2,
+    output logic PC_RST
     );
     
 typedef enum logic [6:0] {
@@ -66,6 +67,11 @@ typedef enum logic [2:0] {
         MEM_WE2 = 1'b0;
         MEM_RDEN1 = 1'b1; // ALWAYS HIGH
         MEM_RDEN2 = 1'b0;
+        PC_RST = 1'b0;
+        
+        if (IR_OPCODE === 7'bx) begin
+            PC_RST = 1'b1; // Set default value if uninitialized
+        end
         
         //Case statement depending on the opcode for the 
         //instruction, or the last seven bits of each instruction
@@ -191,7 +197,10 @@ typedef enum logic [2:0] {
                     end
                 endcase
             end
-            default: begin end
+            default: 
+            begin 
+                PC_SOURCE = 3'b000;
+            end
         endcase
     end
     

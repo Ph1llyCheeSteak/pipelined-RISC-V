@@ -49,7 +49,6 @@ typedef struct packed{
     logic [31:0] pc;
     logic [31:0] opA;
     logic [31:0] opB;
-    logic [1:0] pc_source;
 } instr_t;
 
 module OTTER_MCU(input CLK,
@@ -61,16 +60,16 @@ module OTTER_MCU(input CLK,
                 output logic IOBUS_WR 
 );           
     wire [6:0] opcode;
-    wire [31:0] pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal, pc_int,
+    wire [31:0] pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal,
         I_immed, S_immed, U_immed, aluBin, aluAin, aluResult, rfIn, csr_reg, mem_data, rs1, rs2;
     
     wire [31:0] ir;
     
     wire pcWrite, regWrite, memWrite, op1_sel, mem_op,IorD, pcWriteCond, mem_rden1;
     wire [1:0] opB_sel, rf_sel, wb_sel, mSize;
-    wire [2:0] pc_sel;
     wire [3:0] alu_fun;
-    wire opA_sel;
+    wire [2:0] pc_sel;
+    wire opA_sel, pc_int;
     
     wire br_lt, br_eq, br_ltu;
    
@@ -85,7 +84,6 @@ module OTTER_MCU(input CLK,
      
      assign pcWrite = 1'b1; 	//Hardwired high, assuming now hazards
      assign mem_rden1 = 1'b1; 	//Fetch new instruction every cycle
-     assign pc_int = 1'b0;      // Maybe shouldn't be fixed
     
     // Instantiate the PC and connect relevant I/O
     PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(pcWrite), .PC_SEL(pc_sel),
@@ -159,8 +157,8 @@ module OTTER_MCU(input CLK,
 	//[TODO] Move BR_LT, BR_LTU, BR_EQ and their conditions to just 
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
         .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(alu_src_a), 
-        .ALU_SRCB(alu_src_b), .PC_SOURCE(de_ex_inst.pc_source), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(reg_wr), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(de_ex_inst.mem_rden));
+        .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
+        .REG_WRITE(reg_wr), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(de_ex_inst.mem_rden), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
