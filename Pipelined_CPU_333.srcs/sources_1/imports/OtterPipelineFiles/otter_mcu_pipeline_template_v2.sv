@@ -42,17 +42,13 @@ module OTTER_MCU(input CLK,
                 output logic IOBUS_WR 
 );           
     wire [31:0] pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal,
-        I_immed, S_immed, U_immed, aluBin, aluAin, aluResult, rfIn, csr_reg, mem_data, rs1, rs2;
+        I_immed, S_immed, U_immed, aluBin, aluAin, aluResult, rfIn, csr_reg, rs1, rs2;
     
     wire [31:0] ir;
-    
-    wire pcWrite, regWrite, memWrite, op1_sel, mem_op, pcWriteCond, mem_rden1;
-    wire [1:0] opB_sel, rf_sel, wb_sel, mSize;
-    wire [3:0] alu_fun;
-    wire [2:0] pc_sel;
-    wire opA_sel, pc_int, mem_rden;
+   
     
     wire br_lt, br_eq, br_ltu;
+
     
     logic [4:0] de_inst_rs1_addr;
     logic [4:0] de_inst_rs2_addr;
@@ -78,9 +74,15 @@ module OTTER_MCU(input CLK,
     logic [31:0] opB_forwarded;
     assign IOBUS_ADDR = ex_mem_aluRes;
     assign IOBUS_OUT = ex_mem_rs2;
+    logic [1:0] ex_mem_rf_wr_sel;
     //MEM_WB
      logic mem_wb_regWrite;
      logic mem_wb_mem_addr;
+     logic [31:0] mem_data;
+     logic [1:0] mem_wb_rf_wr_sel;
+     
+    //Instantiate RegFile Mux, connect all relevant I/O
+    logic [31:0] reg_wd; // in wb state
      
 //==== Instruction Fetch ===========================================
 
@@ -135,7 +137,6 @@ module OTTER_MCU(input CLK,
     assign de_inst_opcode = OPCODE;
     
     
-    
      always_ff@(posedge CLK) begin
         de_ex_pc <= if_de_pc;
         de_ex_rs1_addr <= de_inst_rs1_addr;
@@ -166,6 +167,7 @@ module OTTER_MCU(input CLK,
     //and ALU; connect all relevant I/O     
     TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(de_ex_rs1), .U_TYPE(Utype), .OUT(de_ex_opA));
     FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
+
 //==== Execute ======================================================
     always_ff@(posedge CLK) begin
         ex_mem_pc <= de_ex_pc;
@@ -181,6 +183,7 @@ module OTTER_MCU(input CLK,
         ex_mem_rs1 <= de_ex_rs1;
         ex_mem_rs2 <= de_ex_rs2;
         ex_mem_alu_fun <= de_ex_alu_fun;
+        ex_mem_rf_wr_sel <= rf_wr_sel;
 	end
 
     // Instantiate ALU
@@ -194,18 +197,17 @@ module OTTER_MCU(input CLK,
                   .JAL(jal), .JALR(jalr), .BRANCH(branch));
 
 //==== Memory ======================================================
-
     always_ff@(posedge CLK) begin
         mem_wb_regWrite <= ex_mem_regWrite;
+        mem_wb_rf_wr_sel <= ex_mem_rf_wr_sel;
 	end
      
 //==== Write Back ==================================================
      
 
-    //Instantiate RegFile Mux, connect all relevant I/O
-//    logic [31:0] reg_wd, rs1; // in wb state
-//    FourMux OTTER_REG_MUX(.SEL(rf_wr_sel), .ZERO(pc_next), .ONE(32'b0), .TWO(mem_data), .THREE(IOBUS_ADDR),
-//        .OUT(reg_wd));
+
+    FourMux OTTER_REG_MUX(.SEL(mem_wb_rf_wr_sel), .ZERO(pc_next), .ONE(32'b0), .TWO(mem_data), .THREE(IOBUS_ADDR),
+        .OUT(reg_wd));
        
             
 endmodule

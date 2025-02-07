@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="30,344 ps"></ZoomStartTime>
-      <ZoomEndTime time="32,746 ps"></ZoomEndTime>
-      <Cursor1Time time="260,000 ps"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="209.678 ns"></ZoomEndTime>
+      <Cursor1Time time="260.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="371"></NameColumnWidth>
       <ValueColumnWidth column_width="304"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="6" />
+   <WVObjectSize size="16" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -44,5 +44,45 @@
    <wvobject fp_name="/Otter_TB/CPU/de_ex_regWrite" type="logic">
       <obj_property name="ElementShortName">de_ex_regWrite</obj_property>
       <obj_property name="ObjectShortName">de_ex_regWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[10]" type="array">
+      <obj_property name="ElementShortName">[10][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[11]" type="array">
+      <obj_property name="ElementShortName">[11][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[11][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[7]" type="array">
+      <obj_property name="ElementShortName">[7][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR1" type="array">
+      <obj_property name="ElementShortName">ADR1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ADR1[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR2" type="array">
+      <obj_property name="ElementShortName">ADR2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ADR2[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/WD" type="array">
+      <obj_property name="ElementShortName">WD[31:0]</obj_property>
+      <obj_property name="ObjectShortName">WD[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_DCDR/RF_WR_SEL" type="array">
+      <obj_property name="ElementShortName">RF_WR_SEL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">RF_WR_SEL[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/rf_wr_sel" type="logic">
+      <obj_property name="ElementShortName">rf_wr_sel</obj_property>
+      <obj_property name="ObjectShortName">rf_wr_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_MUX/SEL" type="array">
+      <obj_property name="ElementShortName">SEL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">SEL[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/mem_wb_mem_addr" type="logic">
+      <obj_property name="ElementShortName">mem_wb_mem_addr</obj_property>
+      <obj_property name="ObjectShortName">mem_wb_mem_addr</obj_property>
    </wvobject>
 </wave_config>
