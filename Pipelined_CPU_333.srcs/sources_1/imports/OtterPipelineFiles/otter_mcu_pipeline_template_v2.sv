@@ -91,8 +91,6 @@ module OTTER_MCU(input CLK,
         .JALR(pc_jalr), .JAL(pc_jal), .BRANCH(pc_branch), .MTVEC(32'b0), .MEPC(32'b0),
         .PC_OUT(pc), .PC_OUT_INC(pc_next));
 
-
-
     logic [13:0] addr1;
     assign addr1 = pc[15:2];
     
@@ -148,22 +146,22 @@ module OTTER_MCU(input CLK,
     
      always_ff@(posedge CLK) begin
         de_ex_inst <= de_inst;
-        assign de_ex_inst.memWrite = memWrite;
-        assign de_ex_inst.alu_fun = alu_fun;
-        assign de_ex_inst.mem_rden = mem_rden;
-        assign de_ex_inst.regWrite = regWrite;
+//        assign de_ex_inst.memWrite = memWrite;
+//        assign de_ex_inst.alu_fun = alu_fun;
+//        assign de_ex_inst.mem_rden = mem_rden;
+//        assign de_ex_inst.regWrite = regWrite;
 	end
 	
 	//Instantiate RegFile
     REG_FILE OTTER_REG_FILE(.CLK(CLK), .EN(mem_wb_inst.regWrite), .ADR1(de_inst.rs1_addr), .ADR2(de_inst.rs2_addr), .WA(mem_wb_inst.rd_addr), 
-        .WD(reg_wd), .RS1(rs1), .RS2(rs2));
+        .WD(reg_wd), .RS1(rs1), .RS2(de_ex_inst.rs2));
 
 	//Instantiate Decoder
 	//[TODO] Move BR_LT, BR_LTU, BR_EQ and their conditions to just 
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
-        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(alu_fun), .ALU_SRCA(alu_src_a), 
+        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(regWrite), .MEM_WE2(memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(mem_rden), .PC_RST(pc_int));
+        .REG_WRITE(de_ex_inst.regWrite), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(de_ex_inst.mem_rden), .MEM_RDEN2(mem_rden), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -174,8 +172,8 @@ module OTTER_MCU(input CLK,
         
     //Instantiate ALU two-to-one Mux, ALU four-to-one MUX,
     //and ALU; connect all relevant I/O     
-    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(rs1), .U_TYPE(Utype), .OUT(opA));
-    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst.pc), .OUT(opB));
+    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(rs1), .U_TYPE(Utype), .OUT(de_ex_inst.opA));
+    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_inst.rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst.pc), .OUT(de_ex_inst.opB));
 //==== Execute ======================================================
 
     logic [31:0] ex_mem_rs2;
@@ -187,13 +185,13 @@ module OTTER_MCU(input CLK,
     
     always_ff@(posedge CLK) begin
         ex_mem_inst <= de_ex_inst;
-        assign opA_forwarded = opA;
-        assign opB_forwarded = opB;  
-        assign ex_mem_rs2 = rs2;     
+//        assign opA_forwarded = opA;
+//        assign opB_forwarded = opB;  
+//        assign ex_mem_rs2 = rs2;     
 	end
 
     // Instantiate ALU
-    ALU OTTER_ALU(.SRC_A(opA_forwarded), .SRC_B(opB_forwarded), .ALU_FUN(de_ex_inst.alu_fun), .RESULT(ex_mem_aluRes));
+    ALU OTTER_ALU(.SRC_A(de_ex_inst.opA), .SRC_B(de_ex_inst.opB), .ALU_FUN(de_ex_inst.alu_fun), .RESULT(ex_mem_aluRes));
     
 	//Instantiate Branch Condition Generator
     BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
