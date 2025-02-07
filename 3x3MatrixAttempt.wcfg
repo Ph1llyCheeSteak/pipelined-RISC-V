@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="260.001 ns"></ZoomEndTime>
-      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
+      <ZoomStartTime time="30,344 ps"></ZoomStartTime>
+      <ZoomEndTime time="32,746 ps"></ZoomEndTime>
+      <Cursor1Time time="260,000 ps"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="371"></NameColumnWidth>
-      <ValueColumnWidth column_width="312"></ValueColumnWidth>
+      <ValueColumnWidth column_width="304"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="11" />
+   <WVObjectSize size="6" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -29,48 +29,20 @@
       <obj_property name="ElementShortName">pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_inst.opcode" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">.opcode[6:0]</obj_property>
-      <obj_property name="ObjectShortName">.opcode[6:0]</obj_property>
-      <obj_property name="label">.de_inst opcode[6:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_inst.pc" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">.pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">.pc[31:0]</obj_property>
-      <obj_property name="label">de_inst .pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_inst.alu_fun" type="array">
-      <obj_property name="ElementShortName">.alu_fun[3:0]</obj_property>
-      <obj_property name="ObjectShortName">.alu_fun[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_ex_inst.pc" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">.pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">.pc[31:0]</obj_property>
-      <obj_property name="label">de_ex_inst.pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_ex_inst.alu_fun" type="array">
-      <obj_property name="ElementShortName">.alu_fun[3:0]</obj_property>
-      <obj_property name="ObjectShortName">.alu_fun[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/ex_mem_inst.pc" type="array">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">.pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">.pc[31:0]</obj_property>
-      <obj_property name="label">ex_mem.pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/ex_mem_inst.alu_fun" type="array">
-      <obj_property name="ElementShortName">.alu_fun[3:0]</obj_property>
-      <obj_property name="ObjectShortName">.alu_fun[3:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_DCDR/ALU_FUN" type="array">
       <obj_property name="ElementShortName">ALU_FUN[3:0]</obj_property>
       <obj_property name="ObjectShortName">ALU_FUN[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/ex_mem_inst.mem_rden" type="logic">
-      <obj_property name="ElementShortName">.mem_rden</obj_property>
-      <obj_property name="ObjectShortName">.mem_rden</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/ex_mem_regWrite" type="logic">
+      <obj_property name="ElementShortName">ex_mem_regWrite</obj_property>
+      <obj_property name="ObjectShortName">ex_mem_regWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_DCDR/REG_WRITE" type="logic">
+      <obj_property name="ElementShortName">REG_WRITE</obj_property>
+      <obj_property name="ObjectShortName">REG_WRITE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/de_ex_regWrite" type="logic">
+      <obj_property name="ElementShortName">de_ex_regWrite</obj_property>
+      <obj_property name="ObjectShortName">de_ex_regWrite</obj_property>
    </wvobject>
 </wave_config>

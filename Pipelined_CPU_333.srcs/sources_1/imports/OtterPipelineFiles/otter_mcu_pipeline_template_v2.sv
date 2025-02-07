@@ -32,25 +32,6 @@
            SYSTEM   = 7'b1110011
  } opcode_t;
         
-typedef struct packed{
-    opcode_t opcode;
-    logic [4:0] rs1_addr;
-    logic [4:0] rs2_addr;
-    logic [4:0] rd_addr;
-    logic rs1_used;
-    logic rs2_used;
-    logic rd_used;
-    logic [3:0] alu_fun;
-    logic memWrite;
-    logic mem_rden;
-    logic regWrite;
-    logic [1:0] rf_wr_sel;
-    logic [2:0] mem_type;  //sign, size
-    logic [31:0] pc;
-    logic [31:0] opA;
-    logic [31:0] opB;
-    logic [31:0] rs2;
-} instr_t;
 
 module OTTER_MCU(input CLK,
                 input INTR,
@@ -60,7 +41,6 @@ module OTTER_MCU(input CLK,
                 output [31:0] IOBUS_ADDR,
                 output logic IOBUS_WR 
 );           
-    wire [6:0] opcode;
     wire [31:0] pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal,
         I_immed, S_immed, U_immed, aluBin, aluAin, aluResult, rfIn, csr_reg, mem_data, rs1, rs2;
     
@@ -73,8 +53,30 @@ module OTTER_MCU(input CLK,
     wire opA_sel, pc_int, mem_rden;
     
     wire br_lt, br_eq, br_ltu;
-   
-    
+    //DEC_EX
+    logic [31:0] de_ex_pc, de_ex_mem_rden, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
+    logic [3:0] de_ex_alu_fun;
+    logic de_ex_regWrite, de_ex_memWrite;
+    logic [31:0] de_ex_rs1_addr;
+    logic [31:0] de_ex_rs2_addr;
+    logic [31:0] de_ex_rd_addr;
+    logic [31:0] de_ex_opcode;
+    //EX_MEM
+    logic [31:0] ex_mem_rs1_addr;
+    logic [31:0] ex_mem_rs2_addr;
+    logic [31:0] ex_mem_rd_addr;
+    logic [31:0] ex_mem_opcode;
+    logic ex_mem_mem_rden, ex_mem_memWrite, ex_mem_regWrite;
+    logic [31:0] ex_mem_pc, ex_mem_opA, ex_mem_opB, ex_mem_rs1, ex_mem_rs2, ex_mem_alu_fun;
+    logic [31:0] ex_mem_aluRes;
+    logic [31:0] opA_forwarded;
+    logic [31:0] opB_forwarded;
+    assign IOBUS_ADDR = ex_mem_aluRes;
+    assign IOBUS_OUT = ex_mem_rs2;
+    //MEM_WB
+     logic mem_wb_regWrite;
+     logic mem_wb_mem_addr;
+     
 //==== Instruction Fetch ===========================================
 
      logic [31:0] if_de_pc;
@@ -95,43 +97,18 @@ module OTTER_MCU(input CLK,
     assign addr1 = pc[15:2];
     
 //******CONFUSED ABOUT THESE BELOW*******
-
     logic sign;
     assign sign = ir[14]; //before init?
     logic [1:0] size;
     assign size = ir[13:12]; // before init ??
     
     // Instantiate the Memory module and connect relevant I/O    
-    Memory OTTER_MEMORY(.MEM_CLK(CLK), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(ex_mem_inst.mem_rden), 
-        .MEM_WE2(ex_mem_inst.memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(IOBUS_ADDR), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(size),
+    Memory OTTER_MEMORY(.MEM_CLK(CLK), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(ex_mem_mem_rden), 
+        .MEM_WE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(IOBUS_ADDR), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(size),
          .MEM_SIGN(sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data));
     
      
 //==== Instruction Decode ===========================================
-
-    logic [31:0] de_ex_opA;
-    logic [31:0] de_ex_opB;
-    logic [31:0] de_ex_rs2;
-
-    instr_t de_ex_inst, de_inst;
-    
-    opcode_t OPCODE;
-    assign OPCODE = opcode_t'(opcode);
-    
-    assign de_inst.rs1_addr = ir[19:15];
-    assign de_inst.rs2_addr = ir[24:20];
-    assign de_inst.rd_addr = ir[11:7];
-    assign de_inst.opcode = OPCODE;
-   
-    assign de_inst.rs1_used =   de_inst.rs1_addr != 0
-                                && de_inst.opcode != LUI
-                                && de_inst.opcode != AUIPC
-                                && de_inst.opcode != JAL;
-//  assign de_inst.rs2_used;
-//  assign de_inst.rd_used;
-//  assign de_inst.mem_type;  //sign, size
-    assign de_inst.pc = if_de_pc;
-    
     // Logic for Decoder
 	logic ir30;
     assign ir30 = ir[30];
@@ -144,24 +121,34 @@ module OTTER_MCU(input CLK,
     logic [24:0] imgen_ir;
     assign imgen_ir = ir[31:7]; 
     
+    opcode_t OPCODE;
+    assign OPCODE = opcode_t'(opcode);
+    
+    assign de_inst_rs1_addr = ir[19:15];
+    assign de_inst_rs2_addr = ir[24:20];
+    assign de_inst_rd_addr = ir[11:7];
+    assign de_inst_opcode = OPCODE;
+    
+    
+    
      always_ff@(posedge CLK) begin
-        de_ex_inst <= de_inst;
-//        assign de_ex_inst.memWrite = memWrite;
-//        assign de_ex_inst.alu_fun = alu_fun;
-//        assign de_ex_inst.mem_rden = mem_rden;
-//        assign de_ex_inst.regWrite = regWrite;
+        de_ex_pc <= if_de_pc;
+        de_ex_rs1_addr <= de_inst_rs1_addr;
+        de_ex_rs2_addr <= de_inst_rs2_addr;
+        de_ex_rd_addr <= de_inst_rd_addr;
+        de_ex_opcode <= de_inst_opcode;
 	end
 	
 	//Instantiate RegFile
-    REG_FILE OTTER_REG_FILE(.CLK(CLK), .EN(mem_wb_inst.regWrite), .ADR1(de_inst.rs1_addr), .ADR2(de_inst.rs2_addr), .WA(mem_wb_inst.rd_addr), 
-        .WD(reg_wd), .RS1(rs1), .RS2(de_ex_inst.rs2));
+    REG_FILE OTTER_REG_FILE(.CLK(CLK), .EN(mem_wb_regWrite), .ADR1(de_rs1_addr), .ADR2(de_rs2_addr), .WA(mem_wb_rd_addr), 
+        .WD(reg_wd), .RS1(de_ex_rs1), .RS2(de_ex_rs2));
 
 	//Instantiate Decoder
 	//[TODO] Move BR_LT, BR_LTU, BR_EQ and their conditions to just 
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
-        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(alu_src_a), 
+        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(de_ex_inst.regWrite), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(de_ex_inst.mem_rden), .MEM_RDEN2(mem_rden), .PC_RST(pc_int));
+        .REG_WRITE(de_ex_regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden), .MEM_RDEN2(de_ex_mem_rden), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -172,26 +159,27 @@ module OTTER_MCU(input CLK,
         
     //Instantiate ALU two-to-one Mux, ALU four-to-one MUX,
     //and ALU; connect all relevant I/O     
-    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(rs1), .U_TYPE(Utype), .OUT(de_ex_inst.opA));
-    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_inst.rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst.pc), .OUT(de_ex_inst.opB));
+    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(de_ex_rs1), .U_TYPE(Utype), .OUT(de_ex_opA));
+    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
 //==== Execute ======================================================
-
-    logic [31:0] ex_mem_rs2;
-    logic [31:0] ex_mem_aluRes;
-    logic [31:0] opA_forwarded;
-    logic [31:0] opB_forwarded;
-    
-    instr_t ex_mem_inst;
-    
     always_ff@(posedge CLK) begin
-        ex_mem_inst <= de_ex_inst;
-//        assign opA_forwarded = opA;
-//        assign opB_forwarded = opB;  
-//        assign ex_mem_rs2 = rs2;     
+        ex_mem_pc <= de_ex_pc;
+        ex_mem_rs1_addr <= de_ex_rs1_addr;
+        ex_mem_rs2_addr <= de_ex_rs2_addr;
+        ex_mem_rd_addr <= de_ex_rd_addr;
+        ex_mem_opcode <= de_ex_opcode;
+        ex_mem_mem_rden <= de_ex_mem_rden;
+        ex_mem_memWrite <= de_ex_memWrite;
+        ex_mem_regWrite <= de_ex_regWrite;
+        ex_mem_opA <= de_ex_opA;
+        ex_mem_opB <= de_ex_opB;
+        ex_mem_rs1 <= de_ex_rs1;
+        ex_mem_rs2 <= de_ex_rs2;
+        ex_mem_alu_fun <= de_ex_alu_fun;
 	end
 
     // Instantiate ALU
-    ALU OTTER_ALU(.SRC_A(de_ex_inst.opA), .SRC_B(de_ex_inst.opB), .ALU_FUN(de_ex_inst.alu_fun), .RESULT(ex_mem_aluRes));
+    ALU OTTER_ALU(.SRC_A(de_ex_inst_opA), .SRC_B(de_ex_inst_opB), .ALU_FUN(de_ex_inst_alu_fun), .RESULT(ex_mem_aluRes));
     
 	//Instantiate Branch Condition Generator
     BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
@@ -201,14 +189,9 @@ module OTTER_MCU(input CLK,
                   .JAL(jal), .JALR(jalr), .BRANCH(branch));
 
 //==== Memory ======================================================
-     
-    assign IOBUS_ADDR = ex_mem_aluRes;
-    assign IOBUS_OUT = ex_mem_rs2;
-    
-    instr_t mem_wb_inst;
- 
+
     always_ff@(posedge CLK) begin
-        mem_wb_inst <= ex_mem_inst;
+        mem_wb_regWrite <= ex_mem_regWrite;
 	end
      
 //==== Write Back ==================================================
