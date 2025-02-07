@@ -49,6 +49,7 @@ typedef struct packed{
     logic [31:0] pc;
     logic [31:0] opA;
     logic [31:0] opB;
+    logic [31:0] rs2;
 } instr_t;
 
 module OTTER_MCU(input CLK,
@@ -65,11 +66,11 @@ module OTTER_MCU(input CLK,
     
     wire [31:0] ir;
     
-    wire pcWrite, regWrite, memWrite, op1_sel, mem_op,IorD, pcWriteCond, mem_rden1;
+    wire pcWrite, regWrite, memWrite, op1_sel, mem_op, pcWriteCond, mem_rden1;
     wire [1:0] opB_sel, rf_sel, wb_sel, mSize;
     wire [3:0] alu_fun;
     wire [2:0] pc_sel;
-    wire opA_sel, pc_int;
+    wire opA_sel, pc_int, mem_rden;
     
     wire br_lt, br_eq, br_ltu;
    
@@ -117,7 +118,7 @@ module OTTER_MCU(input CLK,
     instr_t de_ex_inst, de_inst;
     
     opcode_t OPCODE;
-    assign OPCODE_t = opcode_t'(opcode);
+    assign OPCODE = opcode_t'(opcode);
     
     assign de_inst.rs1_addr = ir[19:15];
     assign de_inst.rs2_addr = ir[24:20];
@@ -147,6 +148,10 @@ module OTTER_MCU(input CLK,
     
      always_ff@(posedge CLK) begin
         de_ex_inst <= de_inst;
+        assign de_ex_inst.memWrite = memWrite;
+        assign de_ex_inst.alu_fun = alu_fun;
+        assign de_ex_inst.mem_rden = mem_rden;
+        assign de_ex_inst.regWrite = regWrite;
 	end
 	
 	//Instantiate RegFile
@@ -156,9 +161,9 @@ module OTTER_MCU(input CLK,
 	//Instantiate Decoder
 	//[TODO] Move BR_LT, BR_LTU, BR_EQ and their conditions to just 
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
-        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_inst.alu_fun), .ALU_SRCA(alu_src_a), 
+        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(reg_wr), .MEM_WE2(de_ex_inst.memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(de_ex_inst.mem_rden), .PC_RST(pc_int));
+        .REG_WRITE(regWrite), .MEM_WE2(memWrite), .MEM_RDEN1(mem_rden1), .MEM_RDEN2(mem_rden), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -171,13 +176,6 @@ module OTTER_MCU(input CLK,
     //and ALU; connect all relevant I/O     
     TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(rs1), .U_TYPE(Utype), .OUT(opA));
     FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst.pc), .OUT(opB));
-	
-	
-	
-	
-	
-
-	
 //==== Execute ======================================================
 
     logic [31:0] ex_mem_rs2;
@@ -191,7 +189,7 @@ module OTTER_MCU(input CLK,
         ex_mem_inst <= de_ex_inst;
         assign opA_forwarded = opA;
         assign opB_forwarded = opB;  
-        assign ex_mem_rs2 = rs2;      
+        assign ex_mem_rs2 = rs2;     
 	end
 
     // Instantiate ALU
