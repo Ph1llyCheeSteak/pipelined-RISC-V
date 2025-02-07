@@ -53,6 +53,11 @@ module OTTER_MCU(input CLK,
     wire opA_sel, pc_int, mem_rden;
     
     wire br_lt, br_eq, br_ltu;
+    
+    logic [4:0] de_inst_rs1_addr;
+    logic [4:0] de_inst_rs2_addr;
+    logic [4:0] de_inst_rd_addr;
+    logic [6:0] de_inst_opcode;
     //DEC_EX
     logic [31:0] de_ex_pc, de_ex_mem_rden, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
     logic [3:0] de_ex_alu_fun;
@@ -140,7 +145,7 @@ module OTTER_MCU(input CLK,
 	end
 	
 	//Instantiate RegFile
-    REG_FILE OTTER_REG_FILE(.CLK(CLK), .EN(mem_wb_regWrite), .ADR1(de_rs1_addr), .ADR2(de_rs2_addr), .WA(mem_wb_rd_addr), 
+    REG_FILE OTTER_REG_FILE(.CLK(CLK), .EN(mem_wb_regWrite), .ADR1(de_inst_rs1_addr), .ADR2(de_inst_rs2_addr), .WA(mem_wb_rd_addr), 
         .WD(reg_wd), .RS1(de_ex_rs1), .RS2(de_ex_rs2));
 
 	//Instantiate Decoder
