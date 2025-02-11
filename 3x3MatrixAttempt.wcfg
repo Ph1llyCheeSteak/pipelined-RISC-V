@@ -6,21 +6,21 @@
       <db_ref path="Otter_TB_behav.wdb" id="1">
          <top_modules>
             <top_module name="Otter_TB" />
-            <top_module name="\$unit_ALU_sv_2808621980 " />
+            <top_module name="\$unit_ALU_sv_2092618624 " />
             <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="404.663 ns"></ZoomEndTime>
-      <Cursor1Time time="340.000 ns"></Cursor1Time>
+      <ZoomStartTime time="75.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="525.001 ns"></ZoomEndTime>
+      <Cursor1Time time="393.522 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="315"></NameColumnWidth>
+      <NameColumnWidth column_width="283"></NameColumnWidth>
       <ValueColumnWidth column_width="116"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="17" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -28,6 +28,7 @@
    <wvobject fp_name="/Otter_TB/CPU/pc" type="array">
       <obj_property name="ElementShortName">pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/de_ex_rs1" type="array">
       <obj_property name="ElementShortName">de_ex_rs1[31:0]</obj_property>
@@ -37,6 +38,7 @@
    <wvobject fp_name="/Otter_TB/CPU/de_ex_rs2" type="array">
       <obj_property name="ElementShortName">de_ex_rs2[31:0]</obj_property>
       <obj_property name="ObjectShortName">de_ex_rs2[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR1" type="array">
       <obj_property name="ElementShortName">ADR1[4:0]</obj_property>
@@ -45,32 +47,26 @@
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR2" type="array">
       <obj_property name="ElementShortName">ADR2[4:0]</obj_property>
       <obj_property name="ObjectShortName">ADR2[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_IMGEN/I_TYPE" type="array">
-      <obj_property name="ElementShortName">I_TYPE[31:0]</obj_property>
-      <obj_property name="ObjectShortName">I_TYPE[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_ALU/SRC_A" type="array">
       <obj_property name="ElementShortName">SRC_A[31:0]</obj_property>
       <obj_property name="ObjectShortName">SRC_A[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/EN" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+      <obj_property name="label">REGFILE EN</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/ex_mem_aluRes" type="array">
       <obj_property name="ElementShortName">ex_mem_aluRes[31:0]</obj_property>
       <obj_property name="ObjectShortName">ex_mem_aluRes[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/EN" type="logic">
-      <obj_property name="ElementShortName">EN</obj_property>
-      <obj_property name="ObjectShortName">EN</obj_property>
-   </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/WD" type="array">
       <obj_property name="ElementShortName">WD[31:0]</obj_property>
       <obj_property name="ObjectShortName">WD[31:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/mem_wb_rd_addr" type="array">
-      <obj_property name="ElementShortName">mem_wb_rd_addr[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_wb_rd_addr[4:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[7]" type="array">
@@ -91,34 +87,18 @@
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[11]" type="array">
       <obj_property name="ElementShortName">[11][31:0]</obj_property>
       <obj_property name="ObjectShortName">[11][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/MEM_WE2" type="logic">
-      <obj_property name="ElementShortName">MEM_WE2</obj_property>
-      <obj_property name="ObjectShortName">MEM_WE2</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/MEM_ADDR2" type="array">
-      <obj_property name="ElementShortName">MEM_ADDR2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">MEM_ADDR2[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/MEM_DIN2" type="array">
-      <obj_property name="ElementShortName">MEM_DIN2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">MEM_DIN2[31:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[6]" type="array">
+      <obj_property name="ElementShortName">[6][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[6][31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/memory[96]" type="array">
-      <obj_property name="ElementShortName">[96][31:0]</obj_property>
-      <obj_property name="ObjectShortName">[96][31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/weAddrValid" type="logic">
-      <obj_property name="ElementShortName">weAddrValid</obj_property>
-      <obj_property name="ObjectShortName">weAddrValid</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/MEM_SIZE" type="array">
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIZE" type="array">
       <obj_property name="ElementShortName">MEM_SIZE[1:0]</obj_property>
       <obj_property name="ObjectShortName">MEM_SIZE[1:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEMORY/MEM_SIGN" type="logic">
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIGN" type="logic">
       <obj_property name="ElementShortName">MEM_SIGN</obj_property>
       <obj_property name="ObjectShortName">MEM_SIGN</obj_property>
    </wvobject>
