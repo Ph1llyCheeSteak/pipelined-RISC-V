@@ -61,21 +61,22 @@ module OTTER_MCU(input CLK,
     logic [31:0] if_de_pc;
     
     //DEC_EX
-    logic [31:0] de_ex_pc, de_ex_mem_rden, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
+    logic [31:0] de_ex_pc, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
     logic [3:0] de_ex_alu_fun;
-    logic de_ex_regWrite, de_ex_memWrite;
+    logic de_ex_regWrite, de_ex_memWrite, de_ex_mem_rden1, de_ex_mem_rden2;
     logic [31:0] de_ex_rs1_addr;
     logic [31:0] de_ex_rs2_addr;
     logic [31:0] de_ex_rd_addr;
     logic [31:0] de_ex_opcode;
-    logic [31:0] de_ex_aluRes;
+    logic de_ex_sign;
+    logic [1:0] de_ex_size;
     
     //EX_MEM
     logic [31:0] ex_mem_rs1_addr;
     logic [31:0] ex_mem_rs2_addr;
     logic [31:0] ex_mem_rd_addr;
     logic [31:0] ex_mem_opcode;
-    logic ex_mem_mem_rden, ex_mem_memWrite, ex_mem_regWrite;
+    logic ex_mem_mem_rden1, ex_mem_memWrite, ex_mem_regWrite, ex_mem_mem_rden2;
     logic [31:0] ex_mem_pc, ex_mem_opA, ex_mem_opB, ex_mem_rs1, ex_mem_rs2, ex_mem_alu_fun;
     logic [31:0] ex_mem_aluRes;
     logic [31:0] opA_forwarded;
@@ -94,6 +95,7 @@ module OTTER_MCU(input CLK,
      logic mem_wb_sign;
      logic [1:0] mem_wb_size;
      logic [4:0] mem_wb_rd_addr;
+     logic [31:0] wb_mem_data;
 
      //OUTPUTS
      assign IOBUS_ADDR = mem_wb_aluRes;
@@ -117,8 +119,9 @@ module OTTER_MCU(input CLK,
 //    assign addr1 = pc[15:2];
     assign addr1 = pc;
           
-    OTTER_mem_byte OTTER_MEM(.MEM_CLK(CLK), .MEM_READ1(mem_rden1), .MEM_READ2(ex_mem_mem_rden), 
-        .MEM_WRITE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(ex_mem_aluRes), .MEM_DIN2(mem_wb_rs2), .MEM_SIZE(ex_mem_size),
+// Made mem addr aquired from mem_wb instead of ex to align with rest of signals
+    OTTER_mem_byte OTTER_MEM(.MEM_CLK(CLK), .MEM_READ1(ex_mem_mem_rden1), .MEM_READ2(ex_mem_mem_rden2), 
+        .MEM_WRITE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(ex_mem_aluRes), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(ex_mem_size),
          .MEM_SIGN(ex_mem_sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data), .ERR(memERR));
     
 //==== Instruction Decode ===========================================
@@ -142,16 +145,18 @@ module OTTER_MCU(input CLK,
     assign de_inst_rs2_addr = ir[24:20];
     assign rd_addr = ir[11:7];
     assign de_inst_opcode = OPCODE;
-    
+    assign sign = ir[14];
+    assign size = ir[13:12];
      always_ff@(posedge CLK) begin
         de_ex_pc <= if_de_pc;
         de_ex_rs1_addr <= de_inst_rs1_addr;
         de_ex_rs2_addr <= de_inst_rs2_addr;
         de_ex_opcode <= de_inst_opcode;
-        de_ex_memWrite <= memWrite;
+
         de_ex_regWrite <= regWrite;
-        sign <= ir[14];
-        size <= ir[13:12]; 
+         de_ex_sign <= sign;
+         de_ex_size <= size;
+        
 	end
 	
 	//Instantiate RegFile
@@ -162,7 +167,7 @@ module OTTER_MCU(input CLK,
     CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
         .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
-        .REG_WRITE(regWrite), .MEM_WE2(memWrite), .MEM_RDEN1(de_ex_mem_rden), .MEM_RDEN2(de_ex_mem_rden), .PC_RST(pc_int));
+        .REG_WRITE(regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden1), .MEM_RDEN2(de_ex_mem_rden2), .PC_RST(pc_int));
 
     //Create logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -194,6 +199,9 @@ module OTTER_MCU(input CLK,
         ex_mem_aluRes <= aluRes;
         ex_mem_sign <= sign;
         ex_mem_size <= size;
+        ex_mem_mem_rden1 <= de_ex_mem_rden1;
+        ex_mem_mem_rden2 <= de_ex_mem_rden2;
+
 	end
 
     // Instantiate ALU
@@ -214,6 +222,7 @@ module OTTER_MCU(input CLK,
         mem_wb_rd_addr <= ex_mem_rd_addr;
         mem_wb_aluRes <= ex_mem_aluRes;
         mem_wb_rs2 <= ex_mem_rs2;
+//        wb_mem_data <= mem_data;
 	end
      
 //==== Write Back ==================================================

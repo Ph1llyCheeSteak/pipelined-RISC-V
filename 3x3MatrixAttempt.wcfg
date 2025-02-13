@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="75.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="525.001 ns"></ZoomEndTime>
-      <Cursor1Time time="393.522 ns"></Cursor1Time>
+      <ZoomStartTime time="647.605 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,070.480 ns"></ZoomEndTime>
+      <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="283"></NameColumnWidth>
-      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+      <NameColumnWidth column_width="369"></NameColumnWidth>
+      <ValueColumnWidth column_width="200"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="17" />
+   <WVObjectSize size="22" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -30,43 +30,36 @@
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_ex_rs1" type="array">
-      <obj_property name="ElementShortName">de_ex_rs1[31:0]</obj_property>
-      <obj_property name="ObjectShortName">de_ex_rs1[31:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_WRITE2" type="logic">
+      <obj_property name="ElementShortName">MEM_WRITE2</obj_property>
+      <obj_property name="ObjectShortName">MEM_WRITE2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIZE" type="array">
+      <obj_property name="ElementShortName">MEM_SIZE[1:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_SIZE[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIGN" type="logic">
+      <obj_property name="ElementShortName">MEM_SIGN</obj_property>
+      <obj_property name="ObjectShortName">MEM_SIGN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_ADDR2" type="array">
+      <obj_property name="ElementShortName">MEM_ADDR2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_ADDR2[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/de_ex_rs2" type="array">
-      <obj_property name="ElementShortName">de_ex_rs2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">de_ex_rs2[31:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_DIN2" type="array">
+      <obj_property name="ElementShortName">MEM_DIN2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_DIN2[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR1" type="array">
-      <obj_property name="ElementShortName">ADR1[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ADR1[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ADR2" type="array">
-      <obj_property name="ElementShortName">ADR2[4:0]</obj_property>
-      <obj_property name="ObjectShortName">ADR2[4:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_DOUT2" type="array">
+      <obj_property name="ElementShortName">MEM_DOUT2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_DOUT2[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_ALU/SRC_A" type="array">
-      <obj_property name="ElementShortName">SRC_A[31:0]</obj_property>
-      <obj_property name="ObjectShortName">SRC_A[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/EN" type="logic">
-      <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="ElementShortName">EN</obj_property>
-      <obj_property name="ObjectShortName">EN</obj_property>
-      <obj_property name="label">REGFILE EN</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/ex_mem_aluRes" type="array">
       <obj_property name="ElementShortName">ex_mem_aluRes[31:0]</obj_property>
       <obj_property name="ObjectShortName">ex_mem_aluRes[31:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/WD" type="array">
-      <obj_property name="ElementShortName">WD[31:0]</obj_property>
-      <obj_property name="ObjectShortName">WD[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[7]" type="array">
@@ -92,14 +85,39 @@
    <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/ram[6]" type="array">
       <obj_property name="ElementShortName">[6][31:0]</obj_property>
       <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/memory[6144]" type="array">
+      <obj_property name="ElementShortName">[6144][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[6144][31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIZE" type="array">
-      <obj_property name="ElementShortName">MEM_SIZE[1:0]</obj_property>
-      <obj_property name="ObjectShortName">MEM_SIZE[1:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/WA" type="array">
+      <obj_property name="ElementShortName">WA[4:0]</obj_property>
+      <obj_property name="ObjectShortName">WA[4:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_SIGN" type="logic">
-      <obj_property name="ElementShortName">MEM_SIGN</obj_property>
-      <obj_property name="ObjectShortName">MEM_SIGN</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/EN" type="logic">
+      <obj_property name="ElementShortName">EN</obj_property>
+      <obj_property name="ObjectShortName">EN</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_FILE/WD" type="array">
+      <obj_property name="ElementShortName">WD[31:0]</obj_property>
+      <obj_property name="ObjectShortName">WD[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_MUX/TWO" type="array">
+      <obj_property name="ElementShortName">TWO[31:0]</obj_property>
+      <obj_property name="ObjectShortName">TWO[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_REG_MUX/SEL" type="array">
+      <obj_property name="ElementShortName">SEL[1:0]</obj_property>
+      <obj_property name="ObjectShortName">SEL[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/OTTER_MEM/MEM_READ2" type="logic">
+      <obj_property name="ElementShortName">MEM_READ2</obj_property>
+      <obj_property name="ObjectShortName">MEM_READ2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/de_ex_mem_rden2" type="logic">
+      <obj_property name="ElementShortName">de_ex_mem_rden2</obj_property>
+      <obj_property name="ObjectShortName">de_ex_mem_rden2</obj_property>
    </wvobject>
 </wave_config>
