@@ -55,6 +55,7 @@ module OTTER_MCU(input CLK,
 
     logic [31:0] ex_mem_aluRes;
     logic [1:0] ex_mem_rf_wr_sel;
+    logic [2:0] ex_mem_pc_sel;
 
     
     //MEM_WB
@@ -67,6 +68,10 @@ module OTTER_MCU(input CLK,
     //OUTPUTS
     assign IOBUS_ADDR = mem_wb_aluRes;
     assign IOBUS_OUT = ex_mem_rs2;
+    
+    // Logic for OPCODE parsing
+    opcode_t OPCODE;
+    assign OPCODE = opcode_t'(opcode);
     
     // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -88,13 +93,13 @@ module OTTER_MCU(input CLK,
     logic [31:0] pre_mux_A;
     logic [31:0] pre_mux_B;
 
-    //NEED TO ADD PC SOURCE LOGIC. ADD JUMP AND BRANCH TO DCDR
-    //NEED TO ADD FLUSH AND STALL TO PIPELINE REGs. 
+
+    // NEED TO ADD FLUSH AND STALL TO PIPELINE REGs. 
     // ADD STALL TO HAZARD UNIT?? ADD USED SIGNALS, ADD PCSRC
-    // I know we need to add rf_wr_sel but not sure where/ how
+    // I know we need to add rf_wr_sel but not sure where/ how.
     Hazard_Detection OTTER_Hazard_Detection(.opcode(OPCODE), .de_adr1(de_inst_rs1_addr), .de_adr2(de_inst_rs2_addr), 
         .ex_adr1(de_ex_rs1_addr), .ex_adr2(de_ex_rs2_addr), .ex_rd(rd_addr), .mem_rd(ex_mem_rd_addr), 
-        .wb_rd(mem_wb_rd_addr), .pc_source(), .mem_regWrite(ex_mem_regWrite), .de_rs1_used(), .de_rs2_used(), 
+        .wb_rd(mem_wb_rd_addr), .pc_source(ex_mem_pc_sel), .mem_regWrite(ex_mem_regWrite), .de_rs1_used(), .de_rs2_used(), 
         .ex_rs1_used(), .ex_rs2_used(), .fsel1(fsel1), .fsel2(fsel2), .load_use_haz(load_use_haz), 
         .control_haz(control_haz), .flush(flush));
     
@@ -117,7 +122,7 @@ module OTTER_MCU(input CLK,
     assign pcWrite = 1'b1; 	// Hardwired high, assuming no hazards
     assign mem_rden1 = 1'b1; 	// Fetch new instruction every cycle
     
-    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(pcWrite), .PC_SEL(pc_sel),
+    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(pcWrite), .PC_SEL(ex_mem_pc_sel),
         .JALR(pc_jalr), .JAL(pc_jal), .BRANCH(pc_branch), .MTVEC(32'b0), .MEPC(32'b0),
         .PC_OUT(pc), .PC_OUT_INC(pc_next));
 
@@ -143,14 +148,10 @@ module OTTER_MCU(input CLK,
     logic [24:0] imgen_ir;
     assign imgen_ir = ir[31:7]; 
     
-    // Logic for OPCODE parsing
-    opcode_t OPCODE;
-    assign OPCODE = opcode_t'(opcode);
-    
     assign de_inst_rs1_addr = ir[19:15];
     assign de_inst_rs2_addr = ir[24:20];
     assign rd_addr = ir[11:7];
-//    assign de_inst_opcode = OPCODE;
+    assign de_inst_opcode = OPCODE;
     assign sign = ir[14];
     assign size = ir[13:12];
 
@@ -158,7 +159,7 @@ module OTTER_MCU(input CLK,
         de_ex_pc <= if_de_pc;
         de_ex_rs1_addr <= de_inst_rs1_addr;
         de_ex_rs2_addr <= de_inst_rs2_addr;
-//        de_ex_opcode <= de_inst_opcode;
+        de_ex_opcode <= de_inst_opcode;
         de_ex_regWrite <= regWrite;
         de_ex_sign <= sign;
         de_ex_size <= size;
@@ -193,6 +194,7 @@ module OTTER_MCU(input CLK,
         ex_mem_size <= size;
         ex_mem_mem_rden1 <= de_ex_mem_rden1;
         ex_mem_mem_rden2 <= de_ex_mem_rden2;
+        ex_mem_pc_sel <= pc_sel;
 	end
 
     // Instantiate ALU
