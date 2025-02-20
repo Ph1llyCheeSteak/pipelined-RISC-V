@@ -67,6 +67,45 @@ module OTTER_MCU(input CLK,
     //OUTPUTS
     assign IOBUS_ADDR = mem_wb_aluRes;
     assign IOBUS_OUT = ex_mem_rs2;
+    
+    // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
+    logic [31:0] Utype, Itype, Stype, Btype, Jtype;
+    
+//==== HAZARD DETECTION, DATA FORWARDING, FLUSHING ===========================================
+ 
+    // not sure if we need these
+    logic de_rs1_used;
+    logic de_rs2_used;
+    logic ex_rs1_used;
+    logic ex_rs2_used;
+   
+    logic [1:0] fsel1;
+    logic [1:0] fsel2;
+    logic load_use_haz;
+    logic control_haz;
+    logic flush;
+    
+    logic [31:0] pre_mux_A;
+    logic [31:0] pre_mux_B;
+
+    //NEED TO ADD PC SOURCE LOGIC. ADD JUMP AND BRANCH TO DCDR
+    //NEED TO ADD FLUSH AND STALL TO PIPELINE REGs. 
+    // ADD STALL TO HAZARD UNIT?? ADD USED SIGNALS, ADD PCSRC
+    // I know we need to add rf_wr_sel but not sure where/ how
+    Hazard_Detection OTTER_Hazard_Detection(.opcode(OPCODE), .de_adr1(de_inst_rs1_addr), .de_adr2(de_inst_rs2_addr), 
+        .ex_adr1(de_ex_rs1_addr), .ex_adr2(de_ex_rs2_addr), .ex_rd(rd_addr), .mem_rd(ex_mem_rd_addr), 
+        .wb_rd(mem_wb_rd_addr), .pc_source(), .mem_regWrite(ex_mem_regWrite), .de_rs1_used(), .de_rs2_used(), 
+        .ex_rs1_used(), .ex_rs2_used(), .fsel1(fsel1), .fsel2(fsel2), .load_use_haz(load_use_haz), 
+        .control_haz(control_haz), .flush(flush));
+    
+    //PRE-MUXES
+    FourMux OTTER_ALU_PREMUXA(.SEL(fsel1), .ZERO(de_ex_rs1), .ONE(reg_wd), .TWO(ex_mem_aluRes), .THREE(32'b0), .OUT(pre_mux_A));   
+    FourMux OTTER_ALU_PREMUXB(.SEL(fsel2), .ZERO(de_ex_rs2), .ONE(reg_wd), .TWO(ex_mem_aluRes), .THREE(32'b0), .OUT(pre_mux_B));
+    
+    //SRCA MUX - NEED TO UPDATE DCDR
+    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(pre_mux_A), .U_TYPE(Utype), .OUT(de_ex_opA));    
+    //SRCB MUX - NEED TO UPDATE DCDR
+    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(pre_mux_B), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
 
      
 //==== Instruction Fetch ===========================================
@@ -111,7 +150,7 @@ module OTTER_MCU(input CLK,
     assign de_inst_rs1_addr = ir[19:15];
     assign de_inst_rs2_addr = ir[24:20];
     assign rd_addr = ir[11:7];
-    assign de_inst_opcode = OPCODE;
+//    assign de_inst_opcode = OPCODE;
     assign sign = ir[14];
     assign size = ir[13:12];
 
@@ -119,7 +158,7 @@ module OTTER_MCU(input CLK,
         de_ex_pc <= if_de_pc;
         de_ex_rs1_addr <= de_inst_rs1_addr;
         de_ex_rs2_addr <= de_inst_rs2_addr;
-        de_ex_opcode <= de_inst_opcode;
+//        de_ex_opcode <= de_inst_opcode;
         de_ex_regWrite <= regWrite;
         de_ex_sign <= sign;
         de_ex_size <= size;
@@ -130,21 +169,15 @@ module OTTER_MCU(input CLK,
         .WD(reg_wd), .RS1(de_ex_rs1), .RS2(de_ex_rs2));
 
 	// Instantiate Decoder
-    CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(opcode), .IR_FUNCT(funct), .BR_EQ(br_eq), 
+    CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(OPCODE), .IR_FUNCT(funct), .BR_EQ(br_eq), 
         .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
         .REG_WRITE(regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden1), .MEM_RDEN2(de_ex_mem_rden2), .PC_RST(pc_int));
-
-    // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
-    logic [31:0] Utype, Itype, Stype, Btype, Jtype;
     
     // Instantiate Immediate Generator
     ImmediateGenerator OTTER_IMGEN(.IR(imgen_ir), .U_TYPE(Utype), .I_TYPE(Itype), .S_TYPE(Stype),
         .B_TYPE(Btype), .J_TYPE(Jtype));
-        
-    // Instantiate ALU MUXes
-    TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(de_ex_rs1), .U_TYPE(Utype), .OUT(de_ex_opA));
-    FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(de_ex_rs2), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
+       
 
 //==== Execute ======================================================
 
@@ -169,8 +202,8 @@ module OTTER_MCU(input CLK,
     BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
 	
     // Instantiate Branch Address Generator
-    BAG OTTER_BAG(.RS1(rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(pc_out),
-                  .JAL(jal), .JALR(jalr), .BRANCH(branch));
+    BAG OTTER_BAG(.RS1(rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(de_ex_pc),
+                  .JAL(pc_jal), .JALR(pc_jalr), .BRANCH(pc_branch));
 
 //==== Memory ======================================================
 
