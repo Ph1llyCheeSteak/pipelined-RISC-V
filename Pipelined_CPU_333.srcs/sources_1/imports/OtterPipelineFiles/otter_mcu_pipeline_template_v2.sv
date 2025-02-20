@@ -28,11 +28,11 @@ module OTTER_MCU(input CLK,
                 output logic IOBUS_WR 
 );   
         
-    wire [31:0] I_immed, S_immed, U_immed, pc, pc_value, pc_next, pc_jalr, pc_branch, pc_jal;
-    wire [31:0] ir;
+    wire [31:0] I_immed, S_immed, U_immed , pc_value, pc_next, pc_jalr, pc_branch, pc_jal;
     wire [2:0] pc_sel;
     wire br_lt, br_eq, br_ltu,memERR;
-
+    logic [31:0] pc, ir, de_ir;
+    
     //DEC_INST
     logic [31:0] aluRes, if_de_pc, reg_wd;
     logic [6:0] de_inst_opcode;
@@ -43,7 +43,7 @@ module OTTER_MCU(input CLK,
     //DEC_EX
     logic [31:0] de_ex_pc, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
     logic [31:0] de_ex_rs1_addr, de_ex_rs2_addr, de_ex_rd_addr;
-    logic [31:0] de_ex_opcode;
+    logic [6:0] de_ex_opcode;
     logic [3:0] de_ex_alu_fun;
     logic [1:0] de_ex_size;
     logic de_ex_regWrite, de_ex_memWrite, de_ex_mem_rden1, de_ex_mem_rden2, de_ex_sign;
@@ -69,10 +69,6 @@ module OTTER_MCU(input CLK,
     assign IOBUS_ADDR = mem_wb_aluRes;
     assign IOBUS_OUT = ex_mem_rs2;
     
-    // Logic for OPCODE parsing
-    opcode_t OPCODE;
-    assign OPCODE = opcode_t'(opcode);
-    
     // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
     
@@ -93,10 +89,8 @@ module OTTER_MCU(input CLK,
     logic [31:0] pre_mux_A;
     logic [31:0] pre_mux_B;
 
-
-    // NEED TO ADD FLUSH AND STALL TO PIPELINE REGs. 
-    // ADD STALL TO HAZARD UNIT?? ADD USED SIGNALS, ADD PCSRC
-    // I know we need to add rf_wr_sel but not sure where/ how.
+    // ADD USED SIGNALS
+    // IF WE GET ERRORS, CHECK THE OPCODE DATAPATH, PC & IR FLOW, 
     Hazard_Detection OTTER_Hazard_Detection(.opcode(OPCODE), .de_adr1(de_inst_rs1_addr), .de_adr2(de_inst_rs2_addr), 
         .ex_adr1(de_ex_rs1_addr), .ex_adr2(de_ex_rs2_addr), .ex_rd(rd_addr), .mem_rd(ex_mem_rd_addr), 
         .wb_rd(mem_wb_rd_addr), .pc_source(ex_mem_pc_sel), .mem_regWrite(ex_mem_regWrite), .de_rs1_used(), .de_rs2_used(), 
@@ -116,13 +110,24 @@ module OTTER_MCU(input CLK,
 //==== Instruction Fetch ===========================================
      
     always_ff @(posedge CLK) begin //pipeline register
-        if_de_pc <= pc;
+        if(!load_use_haz) begin
+            pc <= pc;
+            ir <= ir;
+        end
+        else if (flush) begin
+            if_de_pc <= 32'b0;
+            de_ir <= 32'b0;
+        end
+        else begin
+            if_de_pc <= pc;
+            de_ir = ir;
+        end
     end
-     
-    assign pcWrite = 1'b1; 	// Hardwired high, assuming no hazards
+    
     assign mem_rden1 = 1'b1; 	// Fetch new instruction every cycle
     
-    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(pcWrite), .PC_SEL(ex_mem_pc_sel),
+    // Disable PC when load_use_haz enabled
+    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(!load_use_haz), .PC_SEL(ex_mem_pc_sel),
         .JALR(pc_jalr), .JAL(pc_jal), .BRANCH(pc_branch), .MTVEC(32'b0), .MEPC(32'b0),
         .PC_OUT(pc), .PC_OUT_INC(pc_next));
 
@@ -138,31 +143,47 @@ module OTTER_MCU(input CLK,
 
     // Logic for Decoder
 	logic ir30;
-    assign ir30 = ir[30];
+    assign ir30 = de_ir[30];
     logic [6:0] opcode;
-    assign opcode = ir[6:0];
+    assign opcode = de_ir[6:0];
     logic [2:0] funct;
-    assign funct = ir[14:12];
+    assign funct = de_ir[14:12];
     
     // Logic for Immediate Generator 
     logic [24:0] imgen_ir;
-    assign imgen_ir = ir[31:7]; 
+    assign imgen_ir = de_ir[31:7]; 
     
-    assign de_inst_rs1_addr = ir[19:15];
-    assign de_inst_rs2_addr = ir[24:20];
-    assign rd_addr = ir[11:7];
+    // Logic for OPCODE parsing
+    opcode_t OPCODE;
+    assign OPCODE = opcode_t'(opcode);
+    
+    assign de_inst_rs1_addr = de_ir[19:15];
+    assign de_inst_rs2_addr = de_ir[24:20];
+    assign rd_addr = de_ir[11:7];
     assign de_inst_opcode = OPCODE;
-    assign sign = ir[14];
-    assign size = ir[13:12];
+    assign sign = de_ir[14];
+    assign size = de_ir[13:12];
 
     always_ff@(posedge CLK) begin
-        de_ex_pc <= if_de_pc;
-        de_ex_rs1_addr <= de_inst_rs1_addr;
-        de_ex_rs2_addr <= de_inst_rs2_addr;
-        de_ex_opcode <= de_inst_opcode;
-        de_ex_regWrite <= regWrite;
-        de_ex_sign <= sign;
-        de_ex_size <= size;
+        if(flush) begin
+            de_ex_pc <= 31'b0;
+            de_ex_rs1_addr <= 5'b0;
+            de_ex_rs2_addr <= 5'b0;
+            de_ex_opcode <= 7'b0;
+            de_ex_regWrite <= 1'b0;
+            de_ex_sign <= 1'b0;
+            de_ex_size <= 2'b0;
+        end
+        else begin
+            de_ex_pc <= if_de_pc;
+            de_ex_rs1_addr <= de_inst_rs1_addr;
+            de_ex_rs2_addr <= de_inst_rs2_addr;
+            de_ex_opcode <= OPCODE;
+            de_ex_regWrite <= regWrite;
+            de_ex_sign <= sign;
+            de_ex_size <= size;
+        end
+        
 	end
 	
 	// Instantiate RegFile
