@@ -109,13 +109,9 @@ module OTTER_MCU(input CLK,
 //==== Instruction Fetch ===========================================
      
     always_ff @(posedge CLK) begin //pipeline register
-        if(!load_use_haz) begin
+        if(load_use_haz) begin // stallF equivalent
             pc <= pc;
             ir <= ir;
-        end
-        else if (flush) begin
-            if_de_pc <= 32'b0;
-            de_ir <= 32'b0;
         end
         else begin
             if_de_pc <= pc;
@@ -164,7 +160,7 @@ module OTTER_MCU(input CLK,
     assign size = de_ir[13:12];
 
     always_ff@(posedge CLK) begin
-        if(flush) begin
+        if(flush && control_haz) begin //branch; need to flush D and E
             de_ex_pc <= 31'b0;
             de_ex_rs1_addr <= 5'b0;
             de_ex_rs2_addr <= 5'b0;
@@ -172,6 +168,15 @@ module OTTER_MCU(input CLK,
             de_ex_regWrite <= 1'b0;
             de_ex_sign <= 1'b0;
             de_ex_size <= 2'b0;
+        end
+        else if (load_use_haz) begin // stall D equivalent
+            de_ex_pc <= de_ex_pc;
+            de_ex_rs1_addr <= de_ex_rs1_addr;
+            de_ex_rs2_addr <= de_ex_rs2_addr;
+            de_ex_opcode <= de_ex_opcode;
+            de_ex_regWrite <= de_ex_regWrite;
+            de_ex_sign <= de_ex_sign;
+            de_ex_size <= de_ex_size;
         end
         else begin
             de_ex_pc <= if_de_pc;
@@ -203,18 +208,34 @@ module OTTER_MCU(input CLK,
 //==== Execute ======================================================
 
     always_ff@(posedge CLK) begin
-        ex_mem_pc <= de_ex_pc;
-        ex_mem_rd_addr <= rd_addr;
-        ex_mem_memWrite <= de_ex_memWrite;
-        ex_mem_regWrite <= de_ex_regWrite;
-        ex_mem_rs2 <= de_ex_rs2;
-        ex_mem_rf_wr_sel <= rf_wr_sel;
-        ex_mem_aluRes <= aluRes;
-        ex_mem_sign <= sign;
-        ex_mem_size <= size;
-        ex_mem_mem_rden1 <= de_ex_mem_rden1;
-        ex_mem_mem_rden2 <= de_ex_mem_rden2;
-        ex_mem_pc_sel <= pc_sel;
+        if (load_use_haz) begin // flushE equivalent
+            ex_mem_pc <= 0;
+            ex_mem_rd_addr <= 0;
+            ex_mem_memWrite <= 0;
+            ex_mem_regWrite <= 0;
+            ex_mem_rs2 <= 0;
+            ex_mem_rf_wr_sel <= 0;
+            ex_mem_aluRes <= 0;
+            ex_mem_sign <= 0;
+            ex_mem_size <= 0;
+            ex_mem_mem_rden1 <= 0;
+            ex_mem_mem_rden2 <= 0;
+            ex_mem_pc_sel <= 0;
+        end
+        else begin
+            ex_mem_pc <= de_ex_pc;
+            ex_mem_rd_addr <= rd_addr;
+            ex_mem_memWrite <= de_ex_memWrite;
+            ex_mem_regWrite <= de_ex_regWrite;
+            ex_mem_rs2 <= de_ex_rs2;
+            ex_mem_rf_wr_sel <= rf_wr_sel;
+            ex_mem_aluRes <= aluRes;
+            ex_mem_sign <= sign;
+            ex_mem_size <= size;
+            ex_mem_mem_rden1 <= de_ex_mem_rden1;
+            ex_mem_mem_rden2 <= de_ex_mem_rden2;
+            ex_mem_pc_sel <= pc_sel;
+        end
 	end
 
     // Instantiate ALU
