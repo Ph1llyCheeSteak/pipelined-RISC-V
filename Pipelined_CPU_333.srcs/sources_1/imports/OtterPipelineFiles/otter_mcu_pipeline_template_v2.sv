@@ -42,7 +42,7 @@ module OTTER_MCU(input CLK,
 
     //DEC_EX
     logic [31:0] de_ex_pc, de_ex_opA, de_ex_opB, de_ex_rs1, de_ex_rs2;
-    logic [31:0] de_ex_rs1_addr, de_ex_rs2_addr, de_ex_rd_addr;
+    logic [4:0] de_ex_rs1_addr, de_ex_rs2_addr, de_ex_rd_addr;
     logic [6:0] de_ex_opcode;
     logic [3:0] de_ex_alu_fun;
     logic [1:0] de_ex_size;
@@ -93,7 +93,7 @@ module OTTER_MCU(input CLK,
     // IF WE GET ERRORS, CHECK THE OPCODE DATAPATH, PC & IR FLOW, 
     Hazard_Detection OTTER_Hazard_Detection(.opcode(OPCODE), .de_adr1(de_inst_rs1_addr), .de_adr2(de_inst_rs2_addr), 
         .ex_adr1(de_ex_rs1_addr), .ex_adr2(de_ex_rs2_addr), .ex_rd(rd_addr), .mem_rd(ex_mem_rd_addr), 
-        .wb_rd(mem_wb_rd_addr), .pc_source(ex_mem_pc_sel), .mem_regWrite(ex_mem_regWrite), .de_rs1_used(), .de_rs2_used(), 
+        .wb_rd(mem_wb_rd_addr), .ex_pc_source(ex_mem_pc_sel), .mem_regWrite(ex_mem_regWrite),
         .ex_rs1_used(), .ex_rs2_used(), .fsel1(fsel1), .fsel2(fsel2), .load_use_haz(load_use_haz), 
         .control_haz(control_haz), .flush(flush));
     
@@ -109,11 +109,7 @@ module OTTER_MCU(input CLK,
 //==== Instruction Fetch ===========================================
      
     always_ff @(posedge CLK) begin //pipeline register
-        if(load_use_haz) begin // stallF equivalent
-            pc <= pc;
-            ir <= ir;
-        end
-        else begin
+        if(!load_use_haz) begin // stallF equivalent
             if_de_pc <= pc;
             de_ir = ir;
         end

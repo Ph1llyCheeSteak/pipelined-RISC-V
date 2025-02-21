@@ -6,19 +6,19 @@
       <db_ref path="Otter_TB_behav.wdb" id="1">
          <top_modules>
             <top_module name="Otter_TB" />
-            <top_module name="\$unit_ALU_sv_2092618624 " />
+            <top_module name="\$unit_ALU_sv_3698968667 " />
             <top_module name="glbl" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="450.001 ns"></ZoomEndTime>
+      <ZoomStartTime time="38.611 ns"></ZoomStartTime>
+      <ZoomEndTime time="532.278 ns"></ZoomEndTime>
       <Cursor1Time time="450.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="369"></NameColumnWidth>
-      <ValueColumnWidth column_width="192"></ValueColumnWidth>
+      <ValueColumnWidth column_width="184"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="18" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
