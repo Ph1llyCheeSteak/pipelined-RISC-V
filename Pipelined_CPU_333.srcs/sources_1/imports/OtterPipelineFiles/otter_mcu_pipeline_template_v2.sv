@@ -202,13 +202,14 @@ module OTTER_MCU(input CLK,
        
 
 //==== Execute ======================================================
-
+    logic [31:0] ex_mem_rs1;
     always_ff@(posedge CLK) begin
         if (load_use_haz) begin // flushE equivalent
             ex_mem_pc <= 0;
             ex_mem_rd_addr <= 0;
             ex_mem_memWrite <= 0;
             ex_mem_regWrite <= 0;
+            ex_mem_rs1 <= 0;
             ex_mem_rs2 <= 0;
             ex_mem_rf_wr_sel <= 0;
             ex_mem_aluRes <= 0;
@@ -223,6 +224,7 @@ module OTTER_MCU(input CLK,
             ex_mem_rd_addr <= rd_addr;
             ex_mem_memWrite <= de_ex_memWrite;
             ex_mem_regWrite <= de_ex_regWrite;
+            ex_mem_rs1 <= de_ex_rs1; /// chcek for issues
             ex_mem_rs2 <= de_ex_rs2;
             ex_mem_rf_wr_sel <= rf_wr_sel;
             ex_mem_aluRes <= aluRes;
@@ -238,10 +240,11 @@ module OTTER_MCU(input CLK,
     ALU OTTER_ALU(.SRC_A(de_ex_opA), .SRC_B(de_ex_opB), .ALU_FUN(de_ex_alu_fun), .RESULT(aluRes));
     
 	//Instantiate Branch Condition Generator
-    BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
+    BCG OTTER_BCG(.RS1(de_ex_rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
 	
     // Instantiate Branch Address Generator
-    BAG OTTER_BAG(.RS1(rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(de_ex_pc),
+    //ex_mem_rs1, ex_mem_px
+    BAG OTTER_BAG(.RS1(ex_mem_rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(ex_mem_pc),
                   .JAL(pc_jal), .JALR(pc_jalr), .BRANCH(pc_branch));
 
 //==== Memory ======================================================
