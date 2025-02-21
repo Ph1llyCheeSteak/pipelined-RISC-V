@@ -42,7 +42,7 @@ module Hazard_Detection(
     output logic flush
     );
     
-    assign load_haz_val = ((de_adr1 == ex_rd) || (de_adr2 == ex_rd)) && (opcode == 6'b000011);
+    assign load_haz_val = ((de_adr1 == ex_rd) || (de_adr2 == ex_rd)) && (opcode == 7'b0000011);
     
     always_comb begin
         fsel1 = 2'b00; //RS1 mux

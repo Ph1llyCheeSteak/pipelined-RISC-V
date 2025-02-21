@@ -30,7 +30,7 @@ module OTTER_MCU(input CLK,
         
     wire [31:0] I_immed, S_immed, U_immed , pc_value, pc_next, pc_jalr, pc_branch, pc_jal;
     wire [2:0] pc_sel;
-    wire br_lt, br_eq, br_ltu,memERR;
+    wire jal, jalr, branch, memERR;
     logic [31:0] pc, ir, de_ir;
     
     //DEC_INST
@@ -118,7 +118,7 @@ module OTTER_MCU(input CLK,
     assign mem_rden1 = 1'b1; 	// Fetch new instruction every cycle
     
     // Disable PC when load_use_haz enabled
-    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(!load_use_haz), .PC_SEL(ex_mem_pc_sel),
+    PC OTTER_PC(.CLK(CLK), .RST(pc_int), .PC_WRITE(!load_use_haz), .PC_SEL(pc_sel),
         .JALR(pc_jalr), .JAL(pc_jal), .BRANCH(pc_branch), .MTVEC(32'b0), .MEPC(32'b0),
         .PC_OUT(pc), .PC_OUT_INC(pc_next));
 
@@ -154,6 +154,11 @@ module OTTER_MCU(input CLK,
     assign de_inst_opcode = OPCODE;
     assign sign = de_ir[14];
     assign size = de_ir[13:12];
+    
+    logic de_ex_branch;
+    logic de_ex_jal;
+    logic de_ex_jalr;
+    logic [2:0] de_ex_funct;
 
     always_ff@(posedge CLK) begin
         if(flush && control_haz) begin //branch; need to flush D and E
@@ -164,6 +169,10 @@ module OTTER_MCU(input CLK,
             de_ex_regWrite <= 1'b0;
             de_ex_sign <= 1'b0;
             de_ex_size <= 2'b0;
+            de_ex_jal <= 1'b0;
+            de_ex_branch <= 1'b0;
+            de_ex_jalr <= 1'b0;
+            de_ex_funct <= 3'b0;
         end
         else if (load_use_haz) begin // stall D equivalent
             de_ex_pc <= de_ex_pc;
@@ -173,6 +182,10 @@ module OTTER_MCU(input CLK,
             de_ex_regWrite <= de_ex_regWrite;
             de_ex_sign <= de_ex_sign;
             de_ex_size <= de_ex_size;
+            de_ex_jal <= de_ex_jal;
+            de_ex_branch <= de_ex_branch;
+            de_ex_jalr <= de_ex_jalr;
+            de_ex_funct <= de_ex_funct;
         end
         else begin
             de_ex_pc <= if_de_pc;
@@ -182,6 +195,10 @@ module OTTER_MCU(input CLK,
             de_ex_regWrite <= regWrite;
             de_ex_sign <= sign;
             de_ex_size <= size;
+            de_ex_jal <= jal;
+            de_ex_branch <= branch;
+            de_ex_jalr <= jalr;
+            de_ex_funct <= funct;
         end
         
 	end
@@ -191,9 +208,9 @@ module OTTER_MCU(input CLK,
         .WD(reg_wd), .RS1(de_ex_rs1), .RS2(de_ex_rs2));
 
 	// Instantiate Decoder
-    CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(OPCODE), .IR_FUNCT(funct), .BR_EQ(br_eq), 
-        .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
-        .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
+    CU_DCDR OTTER_DCDR(.IR_30(ir30), .IR_OPCODE(OPCODE), .IR_FUNCT(funct), .OBRANCH(branch), 
+        .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), .OJALR(jalr), .OJAL(jal),
+        .ALU_SRCB(alu_src_b), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
         .REG_WRITE(regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden1), .MEM_RDEN2(de_ex_mem_rden2), .PC_RST(pc_int));
     
     // Instantiate Immediate Generator
@@ -232,7 +249,7 @@ module OTTER_MCU(input CLK,
             ex_mem_size <= size;
             ex_mem_mem_rden1 <= de_ex_mem_rden1;
             ex_mem_mem_rden2 <= de_ex_mem_rden2;
-            ex_mem_pc_sel <= pc_sel;
+//            ex_mem_pc_sel <= pc_sel;
         end
 	end
 
@@ -240,7 +257,8 @@ module OTTER_MCU(input CLK,
     ALU OTTER_ALU(.SRC_A(de_ex_opA), .SRC_B(de_ex_opB), .ALU_FUN(de_ex_alu_fun), .RESULT(aluRes));
     
 	//Instantiate Branch Condition Generator
-    BCG OTTER_BCG(.RS1(de_ex_rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
+    BCG OTTER_BCG(.RS1(de_ex_rs1), .RS2(IOBUS_OUT), .BRANCH(de_ex_branch), .JAL(de_ex_jal), 
+                  .JALR(de_ex_jalr), .FUNCT(de_ex_funct), .PC_SOURCE(pc_sel));
 	
     // Instantiate Branch Address Generator
     //ex_mem_rs1, ex_mem_px
