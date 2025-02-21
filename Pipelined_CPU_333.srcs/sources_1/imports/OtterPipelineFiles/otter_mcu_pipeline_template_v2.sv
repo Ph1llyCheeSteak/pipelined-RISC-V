@@ -89,7 +89,7 @@ module OTTER_MCU(input CLK,
     logic [31:0] pre_mux_A;
     logic [31:0] pre_mux_B;
 
-    // ADD USED SIGNALS
+    // DO WE NEED THE _USED SIGNALS
     // IF WE GET ERRORS, CHECK THE OPCODE DATAPATH, PC & IR FLOW, 
     Hazard_Detection OTTER_Hazard_Detection(.opcode(OPCODE), .de_adr1(de_inst_rs1_addr), .de_adr2(de_inst_rs2_addr), 
         .ex_adr1(de_ex_rs1_addr), .ex_adr2(de_ex_rs2_addr), .ex_rd(rd_addr), .mem_rd(ex_mem_rd_addr), 
@@ -101,9 +101,8 @@ module OTTER_MCU(input CLK,
     FourMux OTTER_ALU_PREMUXA(.SEL(fsel1), .ZERO(de_ex_rs1), .ONE(reg_wd), .TWO(ex_mem_aluRes), .THREE(32'b0), .OUT(pre_mux_A));   
     FourMux OTTER_ALU_PREMUXB(.SEL(fsel2), .ZERO(de_ex_rs2), .ONE(reg_wd), .TWO(ex_mem_aluRes), .THREE(32'b0), .OUT(pre_mux_B));
     
-    //SRCA MUX - NEED TO UPDATE DCDR
+    // ALU MUXES
     TwoMux OTTER_ALU_MUXA(.SEL(alu_src_a), .RS1(pre_mux_A), .U_TYPE(Utype), .OUT(de_ex_opA));    
-    //SRCB MUX - NEED TO UPDATE DCDR
     FourMux OTTER_ALU_MUXB(.SEL(alu_src_b), .ZERO(pre_mux_B), .ONE(Itype), .TWO(Stype), .THREE(de_inst_pc), .OUT(de_ex_opB));
 
      
