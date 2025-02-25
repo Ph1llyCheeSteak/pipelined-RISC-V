@@ -133,7 +133,7 @@ module OTTER_mem_dualport(MEM_CLK,MEM_ADDR1,MEM_ADDR2,MEM_DIN2,MEM_WRITE2,MEM_RE
     (* ram_decomp = "power" *) logic [31:0] memory [0:2**ACTUAL_WIDTH-1];
     
     initial begin
-        $readmemh("Pipeline_Week_2_Mem.mem", memory, 0, 2**ACTUAL_WIDTH-1);
+        $readmemh("noHazard.mem", memory, 0, 2**ACTUAL_WIDTH-1);
     end 
     
 

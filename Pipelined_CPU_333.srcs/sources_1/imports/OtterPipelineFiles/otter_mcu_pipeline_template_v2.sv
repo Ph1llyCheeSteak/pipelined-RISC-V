@@ -104,6 +104,10 @@ module OTTER_MCU(input CLK,
     logic [24:0] imgen_ir;
     assign imgen_ir = ir[31:7]; 
     
+    // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
+    logic [31:0] de_ex_Utype, de_ex_Itype, de_ex_Stype, de_ex_Btype, de_ex_Jtype;
+    logic [31:0] Utype, Itype, Stype, Btype, Jtype;
+    
     // Logic for OPCODE parsing
     opcode_t OPCODE;
     assign OPCODE = opcode_t'(opcode);
@@ -116,6 +120,7 @@ module OTTER_MCU(input CLK,
     assign size = ir[13:12];
 
     always_ff@(posedge CLK) begin
+//        de_ex_imgen_ir <= ir[31:7];
         de_ex_pc <= if_de_pc;
         de_ex_rs1_addr <= de_inst_rs1_addr;
         de_ex_rs2_addr <= de_inst_rs2_addr;
@@ -123,6 +128,11 @@ module OTTER_MCU(input CLK,
         de_ex_regWrite <= regWrite;
         de_ex_sign <= sign;
         de_ex_size <= size;
+        de_ex_Utype <= Utype;
+        de_ex_Itype <= Itype;
+        de_ex_Stype <= Stype;
+        de_ex_Btype <= Btype;
+        de_ex_Jtype <= Jtype;
 	end
 	
 	// Instantiate RegFile
@@ -134,9 +144,6 @@ module OTTER_MCU(input CLK,
         .BR_LT(br_lt), .BR_LTU(br_ltu), .ALU_FUN(de_ex_alu_fun), .ALU_SRCA(alu_src_a), 
         .ALU_SRCB(alu_src_b), .PC_SOURCE(pc_sel), .RF_WR_SEL(rf_wr_sel), .PC_WRITE(pc_write), 
         .REG_WRITE(regWrite), .MEM_WE2(de_ex_memWrite), .MEM_RDEN1(de_ex_mem_rden1), .MEM_RDEN2(de_ex_mem_rden2), .PC_RST(pc_int));
-
-    // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
-    logic [31:0] Utype, Itype, Stype, Btype, Jtype;
     
     // Instantiate Immediate Generator
     ImmediateGenerator OTTER_IMGEN(.IR(imgen_ir), .U_TYPE(Utype), .I_TYPE(Itype), .S_TYPE(Stype),
@@ -166,11 +173,11 @@ module OTTER_MCU(input CLK,
     ALU OTTER_ALU(.SRC_A(de_ex_opA), .SRC_B(de_ex_opB), .ALU_FUN(de_ex_alu_fun), .RESULT(aluRes));
     
 	//Instantiate Branch Condition Generator
-    BCG OTTER_BCG(.RS1(rs1), .RS2(IOBUS_OUT), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
+    BCG OTTER_BCG(.RS1(de_ex_rs1), .RS2(de_ex_rs2), .BR_EQ(br_eq), .BR_LT(br_lt), .BR_LTU(br_ltu));
 	
     // Instantiate Branch Address Generator
-    BAG OTTER_BAG(.RS1(rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(pc_out),
-                  .JAL(jal), .JALR(jalr), .BRANCH(branch));
+    BAG OTTER_BAG(.RS1(de_ex_rs1), .I_TYPE(de_ex_Itype), .J_TYPE(de_ex_Jtype), .B_TYPE(de_ex_Btype), .FROM_PC(de_ex_pc),
+                  .JAL(pc_jal), .JALR(pc_jalr), .BRANCH(pc_branch));
 
 //==== Memory ======================================================
 
