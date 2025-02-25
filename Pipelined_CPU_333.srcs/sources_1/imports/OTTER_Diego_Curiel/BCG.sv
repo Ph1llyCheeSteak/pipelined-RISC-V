@@ -24,43 +24,54 @@ module BCG(
     assign BR_EQ = RS1 == RS2;
     
     always_comb begin
-        case(FUNCT)
-            3'b000: begin
-                if (BR_EQ == 1'b1)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000; 
-            end
-            3'b001: begin 
-                if (BR_EQ == 1'b0)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000; 
-            end
-            3'b100: begin 
-                if (BR_LT == 1'b1)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000;
-            end
-            3'b101: begin 
-                if (BR_LT == 1'b0)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000;
-            end
-            3'b110: begin 
-                if (BR_LTU == 1'b1)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000;
-            end
-            3'b111: begin 
-                if (BR_LTU == 1'b0)
-                    PC_SOURCE = 3'b010;
-                else
-                    PC_SOURCE = 3'b000;
-            end
-        endcase
+        if (BRANCH) begin
+            case(FUNCT)
+                3'b000: begin
+                    if (BR_EQ == 1'b1)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000; 
+                end
+                3'b001: begin 
+                    if (BR_EQ == 1'b0)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000; 
+                end
+                3'b100: begin 
+                    if (BR_LT == 1'b1)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000;
+                end
+                3'b101: begin 
+                    if (BR_LT == 1'b0)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000;
+                end
+                3'b110: begin 
+                    if (BR_LTU == 1'b1)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000;
+                end
+                3'b111: begin 
+                    if (BR_LTU == 1'b0)
+                        PC_SOURCE = 3'b010;
+                    else
+                        PC_SOURCE = 3'b000;
+                end
+            endcase
+        end
+        else if(JAL) begin
+            PC_SOURCE = 3'b011;
+        end
+        else if (JALR) begin
+            PC_SOURCE = 3'b001;
+        end
+        else begin
+            PC_SOURCE = 3'b000;
+        end
     end
 endmodule

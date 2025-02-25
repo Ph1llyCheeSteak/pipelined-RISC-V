@@ -67,7 +67,7 @@ module OTTER_MCU(input CLK,
 
     //OUTPUTS
     assign IOBUS_ADDR = mem_wb_aluRes;
-    assign IOBUS_OUT = ex_mem_rs2;
+    assign IOBUS_OUT = pre_mux_B;
     
     // Logic for Immediate Generator outputs and BAG and ALU MUX inputs    
     logic [31:0] Utype, Itype, Stype, Btype, Jtype;
@@ -127,7 +127,7 @@ module OTTER_MCU(input CLK,
           
     //Instantiate Mem
     OTTER_mem_byte OTTER_MEM(.MEM_CLK(CLK), .MEM_READ1(ex_mem_mem_rden1), .MEM_READ2(ex_mem_mem_rden2), 
-        .MEM_WRITE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(ex_mem_aluRes), .MEM_DIN2(ex_mem_rs2), .MEM_SIZE(ex_mem_size),
+        .MEM_WRITE2(ex_mem_memWrite), .MEM_ADDR1(addr1), .MEM_ADDR2(ex_mem_aluRes), .MEM_DIN2(pre_mux_B), .MEM_SIZE(ex_mem_size),
          .MEM_SIGN(ex_mem_sign), .IO_IN(IOBUS_IN), .IO_WR(IOBUS_WR), .MEM_DOUT1(ir), .MEM_DOUT2(mem_data), .ERR(memERR));
     
 //==== Instruction Decode ===========================================
@@ -257,12 +257,12 @@ module OTTER_MCU(input CLK,
     ALU OTTER_ALU(.SRC_A(de_ex_opA), .SRC_B(de_ex_opB), .ALU_FUN(de_ex_alu_fun), .RESULT(aluRes));
     
 	//Instantiate Branch Condition Generator
-    BCG OTTER_BCG(.RS1(de_ex_rs1), .RS2(IOBUS_OUT), .BRANCH(de_ex_branch), .JAL(de_ex_jal), 
+    BCG OTTER_BCG(.RS1(pre_mux_A), .RS2(pre_mux_B), .BRANCH(de_ex_branch), .JAL(de_ex_jal), 
                   .JALR(de_ex_jalr), .FUNCT(de_ex_funct), .PC_SOURCE(pc_sel));
 	
     // Instantiate Branch Address Generator
     //ex_mem_rs1, ex_mem_px
-    BAG OTTER_BAG(.RS1(ex_mem_rs1), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(ex_mem_pc),
+    BAG OTTER_BAG(.RS1(pre_mux_A), .I_TYPE(Itype), .J_TYPE(Jtype), .B_TYPE(Btype), .FROM_PC(ex_mem_pc),
                   .JAL(pc_jal), .JALR(pc_jalr), .BRANCH(pc_branch));
 
 //==== Memory ======================================================
