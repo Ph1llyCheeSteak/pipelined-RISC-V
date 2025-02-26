@@ -1,84 +1,68 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 02/18/2025 02:44:26 PM
-// Design Name: 
-// Module Name: Hazard_Detection
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
+//
+// Engineer:  S. Weston & Phillipe Bakhirev
+// Module Name: PIPELINED_OTTER_CPU
+// Revision: 0.1
+//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module Hazard_Detection(
-    input logic [6:0] opcode,
-    input logic [4:0] de_adr1,
-    input logic [4:0] de_adr2,
-    input logic [4:0] ex_adr1,
-    input logic [4:0] ex_adr2,
-    input logic [4:0] ex_rd,
-    input logic [4:0] mem_rd,
-    input logic [4:0] wb_rd,
-    input logic [1:0] ex_pc_source,
-    input logic mem_regWrite,
-//    input logic de_rs1_used,
-//    input logic de_rs2_used,
-    input logic ex_rs1_used,
-    input logic ex_rs2_used,
-    output logic [1:0] fsel1,
-    output logic [1:0] fsel2,
-    output logic load_use_haz,
-    output logic control_haz,
-    output logic flush
+    input [4:0] rs1_e, rs2_e,rs1_d, rs2_d,
+    input de_ex_rs1_used, 
+    input de_ex_rs2_used, 
+    input mem_rd_used,
+    input wb_rd_used, 
+    input de_rs1_used,
+    input de_rs2_used, 
+    input de_ex_rd_used, 
+    input [4:0] ex_mem_rd, 
+    input [4:0] mem_wb_rd, 
+    input [4:0] id_ex_rd,
+    input ex_mem_regWrite,
+    input mem_wb_regWrite,
+    input memRead2, 
+    input stalled,
+    input stalled2,
+    input [2:0] pcSource,
+    output reg [1:0] ForwardA, 
+    output reg [1:0] ForwardB,
+    output reg stall, 
+    output reg flush
     );
-    
-    assign load_haz_val = ((de_adr1 == ex_rd) || (de_adr2 == ex_rd)) && (opcode == 7'b0000011);
-    
+     
     always_comb begin
-        fsel1 = 2'b00; //RS1 mux
-        fsel2 = 2'b00; //RS2 mux
-        load_use_haz = 1'b0;
-        control_haz = 1'b0;
-        flush = 1'b0;
-        // Selects for forwarding muxes
-        // ALU Source A
-        if (mem_regWrite && mem_rd == ex_adr1 && ex_rs1_used) // RAW 1 inst above
-            fsel1 = 2'b10; 
-        else if (mem_regWrite && wb_rd == ex_adr1 && ex_rs1_used) // RAW 2 inst above being
-            fsel1 = 2'b01;
-        else 
-            fsel1 = 2'b00;
-        // ALU Source B
-        if (mem_regWrite && mem_rd == ex_adr2 && ex_rs2_used) 
-            fsel2 = 2'b10;
-        else if (mem_regWrite && wb_rd == ex_adr2 && ex_rs2_used)
-            fsel2 = 2'b01;
-        else 
-            fsel2 = 2'b00;
+        ForwardA = 2'b00; 
+        ForwardB = 2'b00;
+        stall = 1'b0; 
+        flush = 1'b0; 
         
-        // Load use data hazard
-        if (load_haz_val) 
-            load_use_haz = 1'b1;
-        // Control hazards - jal, jalr, branch
-        if (ex_pc_source != 2'b00) begin
-            control_haz = 1'b1;
+        // conditions for forwarding A
+         if((rs1_e == ex_mem_rd) && ex_mem_regWrite && de_ex_rs1_used && mem_rd_used && !stalled2) begin // need more?
+            ForwardA = 2'b10;
+        end 
+        else if(((rs1_e == mem_wb_rd) && mem_wb_regWrite) && de_ex_rs1_used && wb_rd_used) begin
+            ForwardA = 2'b01;
+        end        
+        // conditions for forwarding B
+         if(((rs2_e == ex_mem_rd) && ex_mem_regWrite) && de_ex_rs2_used && mem_rd_used && !stalled2) begin // need more?
+            ForwardB = 2'b10;
+        end
+        
+        else if(((rs2_e == mem_wb_rd) && mem_wb_regWrite) && de_ex_rs2_used && wb_rd_used)begin
+            ForwardB = 2'b01;
+        end
+                       
+        // conditions for stall
+        if((memRead2 && !stalled && de_ex_rd_used && ((de_rs1_used && rs1_d == id_ex_rd) || (de_rs2_used && rs2_d == id_ex_rd)))) begin
+            stall = 1'b1;
+        end
+        
+        if(pcSource != 0) begin
             flush = 1'b1;
         end
-        else begin 
-            control_haz = 1'b0;
-            flush = 1'b0;
+        else begin
+            flush = 0;
         end
     end
-    
-    
 endmodule

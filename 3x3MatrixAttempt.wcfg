@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="36.666 ns"></ZoomStartTime>
-      <ZoomEndTime time="467.264 ns"></ZoomEndTime>
-      <Cursor1Time time="710.000 ns"></Cursor1Time>
+      <ZoomStartTime time="5,964.400 ns"></ZoomStartTime>
+      <ZoomEndTime time="6,055.201 ns"></ZoomEndTime>
+      <Cursor1Time time="5,850.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="369"></NameColumnWidth>
-      <ValueColumnWidth column_width="148"></ValueColumnWidth>
+      <NameColumnWidth column_width="343"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="18" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -30,90 +30,70 @@
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_ALU/SRC_A" type="array">
+   <wvobject fp_name="/Otter_TB/CPU/OPCODE" type="array">
+      <obj_property name="ElementShortName">OPCODE[6:0]</obj_property>
+      <obj_property name="ObjectShortName">OPCODE[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/regfile/ADR1" type="array">
+      <obj_property name="ElementShortName">ADR1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">ADR1[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/PC/PC_OUT" type="array">
+      <obj_property name="ElementShortName">PC_OUT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PC_OUT[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_ADDR2" type="array">
+      <obj_property name="ElementShortName">MEM_ADDR2[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_ADDR2[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_ADDR1" type="array">
+      <obj_property name="ElementShortName">MEM_ADDR1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_ADDR1[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/ALU/RESULT" type="array">
+      <obj_property name="ElementShortName">RESULT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">RESULT[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/ALU/SRC_A" type="array">
       <obj_property name="ElementShortName">SRC_A[31:0]</obj_property>
       <obj_property name="ObjectShortName">SRC_A[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_ALU/SRC_B" type="array">
+   <wvobject fp_name="/Otter_TB/CPU/ALU/SRC_B" type="array">
       <obj_property name="ElementShortName">SRC_B[31:0]</obj_property>
       <obj_property name="ObjectShortName">SRC_B[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/BR_EQ" type="logic">
-      <obj_property name="ElementShortName">BR_EQ</obj_property>
-      <obj_property name="ObjectShortName">BR_EQ</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/muxAluA/SEL" type="logic">
+      <obj_property name="ElementShortName">SEL</obj_property>
+      <obj_property name="ObjectShortName">SEL</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BAG/JALR" type="array">
-      <obj_property name="ElementShortName">JALR[31:0]</obj_property>
-      <obj_property name="ObjectShortName">JALR[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BAG/JAL" type="array">
-      <obj_property name="ElementShortName">JAL[31:0]</obj_property>
-      <obj_property name="ObjectShortName">JAL[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BAG/BRANCH" type="array">
-      <obj_property name="ElementShortName">BRANCH[31:0]</obj_property>
-      <obj_property name="ObjectShortName">BRANCH[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_PC/PC_SEL" type="array">
-      <obj_property name="ElementShortName">PC_SEL[2:0]</obj_property>
-      <obj_property name="ObjectShortName">PC_SEL[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_PC/PC_WRITE" type="logic">
-      <obj_property name="ElementShortName">PC_WRITE</obj_property>
-      <obj_property name="ObjectShortName">PC_WRITE</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_Hazard_Detection/load_use_haz" type="logic">
-      <obj_property name="ElementShortName">load_use_haz</obj_property>
-      <obj_property name="ObjectShortName">load_use_haz</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_Hazard_Detection/control_haz" type="logic">
-      <obj_property name="ElementShortName">control_haz</obj_property>
-      <obj_property name="ObjectShortName">control_haz</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_Hazard_Detection/flush" type="logic">
-      <obj_property name="ElementShortName">flush</obj_property>
-      <obj_property name="ObjectShortName">flush</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/pc_sel" type="array">
-      <obj_property name="ElementShortName">pc_sel[2:0]</obj_property>
-      <obj_property name="ObjectShortName">pc_sel[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/JAL" type="logic">
-      <obj_property name="ElementShortName">JAL</obj_property>
-      <obj_property name="ObjectShortName">JAL</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/JALR" type="logic">
-      <obj_property name="ElementShortName">JALR</obj_property>
-      <obj_property name="ObjectShortName">JALR</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/BRANCH" type="logic">
-      <obj_property name="ElementShortName">BRANCH</obj_property>
-      <obj_property name="ObjectShortName">BRANCH</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/PC_SOURCE" type="array">
-      <obj_property name="ElementShortName">PC_SOURCE[2:0]</obj_property>
-      <obj_property name="ObjectShortName">PC_SOURCE[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/FUNCT" type="array">
-      <obj_property name="ElementShortName">FUNCT[2:0]</obj_property>
-      <obj_property name="ObjectShortName">FUNCT[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/BR_EQ" type="logic">
-      <obj_property name="ElementShortName">BR_EQ</obj_property>
-      <obj_property name="ObjectShortName">BR_EQ</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/RS1" type="array">
+   <wvobject fp_name="/Otter_TB/CPU/muxAluA/RS1" type="array">
       <obj_property name="ElementShortName">RS1[31:0]</obj_property>
       <obj_property name="ObjectShortName">RS1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/regMux/OUT" type="array">
+      <obj_property name="ElementShortName">OUT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">OUT[31:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BCG/RS2" type="array">
-      <obj_property name="ElementShortName">RS2[31:0]</obj_property>
-      <obj_property name="ObjectShortName">RS2[31:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/IR" type="array">
+      <obj_property name="ElementShortName">IR[31:0]</obj_property>
+      <obj_property name="ObjectShortName">IR[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/OTTER_BAG/FROM_PC" type="array">
-      <obj_property name="ElementShortName">FROM_PC[31:0]</obj_property>
-      <obj_property name="ObjectShortName">FROM_PC[31:0]</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_ADDR1" type="array">
+      <obj_property name="ElementShortName">MEM_ADDR1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_ADDR1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_DOUT1" type="array">
+      <obj_property name="ElementShortName">MEM_DOUT1[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MEM_DOUT1[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_READ1" type="logic">
+      <obj_property name="ElementShortName">MEM_READ1</obj_property>
+      <obj_property name="ObjectShortName">MEM_READ1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/Memdual/MEM_READ2" type="logic">
+      <obj_property name="ElementShortName">MEM_READ2</obj_property>
+      <obj_property name="ObjectShortName">MEM_READ2</obj_property>
    </wvobject>
 </wave_config>
