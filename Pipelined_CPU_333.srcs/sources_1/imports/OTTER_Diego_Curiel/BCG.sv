@@ -22,11 +22,11 @@ module BCG(
     assign BR_EQ = RS1 == RS2;
     
     always_comb begin
-    branch = 1'b0;
+    branch = 1'b0; 
     PC_SOURCE = 3'b000;
         case (opcode)
            7'b1100011: begin
-           branch = 1'b1;
+           branch = 1'b1; // this sets high for everything which we don't want
                case(func3) 
                    3'b000: begin
                         if (BR_EQ == 1'b1)

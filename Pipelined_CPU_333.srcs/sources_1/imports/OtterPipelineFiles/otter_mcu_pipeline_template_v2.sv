@@ -60,6 +60,7 @@ module OTTER_MCU(input CLK,
     logic [31:0] pc, B_type, J_type, rs2;
     logic [2:0]  BCG_PC_SOURCE;
     logic [1:0] ForwardA, ForwardB;
+    logic branch;
     logic br_lt,br_eq,br_ltu;
     logic stall, stalled, stalled2, flush, flushed;
     logic pcWrite, memRead1;
@@ -87,6 +88,7 @@ module OTTER_MCU(input CLK,
               
 //==== Instruction Fetch ===========================================
     logic [2:0] PCSOURCEIN;
+    assign BCG_PC_SOURCE = (BCG_PC_SOURCE) ? branch: 2'b00;
     assign PCSOURCEIN = de_ex_inst.pc_sel | BCG_PC_SOURCE;
 
     PC PC  (
@@ -107,7 +109,7 @@ module OTTER_MCU(input CLK,
     logic [31:0] if_de_next_pc;
     instr_t de_ex_inst, de_inst;
 
-    always_comb begin
+    always_comb begin 
       if (stall == 1'b0) begin
             pcWrite <= 1'b1;
             memRead1 <= 1'b1;
@@ -128,7 +130,7 @@ module OTTER_MCU(input CLK,
             stalled <=1'b1;
         end   
     end
-    
+
     always_ff @(posedge CLK) begin
         if (stalled) begin
             stalled2 <= 1'b1;
@@ -153,19 +155,19 @@ end
 //==== Hazard Detection ===========================================
    wire  BCGMUXSelA, BCGMUXSelB;
    
-    assign de_inst.rs1_used=    de_inst.rs1_addr != 0    //erm... shouldnt this be address?
-                                && de_inst.opcode != LUI
+    assign de_inst.rs1_used=    de_inst.rs1_addr != 0    
+                                && de_inst.opcode != LUI 
                                 && de_inst.opcode != AUIPC
                                 && de_inst.opcode != JAL;
     
-    assign de_inst.rs2_used=    de_inst.rs2_addr != 0   //same logic here but w/ rs2 readwrites
+    assign de_inst.rs2_used=    de_inst.rs2_addr != 0   
                                 && de_inst.opcode != OP_IMM
                                 && de_inst.opcode != LUI
                                 && de_inst.opcode != AUIPC
                                 && de_inst.opcode != JAL;
                                 
-    assign de_inst.rd_used=     de_inst.rd_addr != 0    //heh. rd means read dest i think so these
-                                && de_inst.opcode != BRANCH
+    assign de_inst.rd_used=     de_inst.rd_addr != 0    
+                                && de_inst.opcode != BRANCH 
                                 && de_inst.opcode != STORE;
                                 
     // Instantiate Hazard Unit
@@ -300,7 +302,8 @@ end
         .RS2        (HazardBout),
         .func3      (de_ex_inst.mem_type),
         .opcode     (de_ex_inst.opcode),
-        .PC_SOURCE  (BCG_PC_SOURCE)
+        .PC_SOURCE  (BCG_PC_SOURCE),
+        .branch     (BCG_branch)
     );
         
     // Instantiate Branch Address Generator
