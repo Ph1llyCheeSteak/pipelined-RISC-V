@@ -26,41 +26,52 @@ module BCG(
     PC_SOURCE = 3'b000;
         case (opcode)
            7'b1100011: begin
-           branch = 1'b1; // this sets high for everything which we don't want
                case(func3) 
                    3'b000: begin
-                        if (BR_EQ == 1'b1)
+                        if (BR_EQ == 1'b1) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000; 
                     end
                     3'b001: begin 
-                        if (BR_EQ == 1'b0)
+                        if (BR_EQ == 1'b0) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000; 
                     end
                     3'b100: begin 
-                        if (BR_LT == 1'b1)
+                        if (BR_LT == 1'b1) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000;
                     end
                     3'b101: begin 
-                        if (BR_LT == 1'b0)
+                        if (BR_LT == 1'b0) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000;
                     end
                     3'b110: begin 
-                        if (BR_LTU == 1'b1)
+                        if (BR_LTU == 1'b1) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000;
                     end
                     3'b111: begin 
-                        if (BR_LTU == 1'b0)
+                        if (BR_LTU == 1'b0) begin
                             PC_SOURCE = 3'b010;
+                            branch = 1'b1;
+                        end
                         else
                             PC_SOURCE = 3'b000;
                     end

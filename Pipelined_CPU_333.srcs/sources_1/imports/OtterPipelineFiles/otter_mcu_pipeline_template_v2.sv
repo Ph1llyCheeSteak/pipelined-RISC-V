@@ -32,12 +32,9 @@ typedef struct packed{
     logic memWrite;
     logic memRead2;
     logic regWrite;
+    logic [31:0] pc;
     logic [1:0] rf_wr_sel;
     logic [2:0] mem_type;  //sign, size
-    logic [31:0] pc;
-    logic [31:0] jalr;
-    logic [31:0] branch;
-    logic [31:0] jump;
     logic [31:0]U_immed, I_immed, S_immed, J_type, B_type;
     logic [2:0] pc_sel;
     logic [31:0] rs1;
@@ -56,11 +53,14 @@ module OTTER_MCU(input CLK,
     wire [31:0] IR, HazardAout, HazardBout;
     wire [1:0] opB_sel;
     wire opA_sel;
+    wire BR_EN;
+    wire [31:0] jalr;
+    wire [31:0] branch;
+    wire [31:0] jump;
     
     logic [31:0] pc, B_type, J_type, rs2;
     logic [2:0]  BCG_PC_SOURCE;
     logic [1:0] ForwardA, ForwardB;
-    logic branch;
     logic br_lt,br_eq,br_ltu;
     logic stall, stalled, stalled2, flush, flushed;
     logic pcWrite, memRead1;
@@ -88,17 +88,17 @@ module OTTER_MCU(input CLK,
               
 //==== Instruction Fetch ===========================================
     logic [2:0] PCSOURCEIN;
-    assign BCG_PC_SOURCE = (BCG_PC_SOURCE) ? branch: 2'b00;
+    assign BCG_PC_SOURCE = (BCG_PC_SOURCE) ? BR_EN: 2'b00;
     assign PCSOURCEIN = de_ex_inst.pc_sel | BCG_PC_SOURCE;
-
+       
     PC PC  (
        .CLK        (CLK),
        .RST        (RESET),
        .PC_WRITE   (pcWrite),
        .PC_SEL     (PCSOURCEIN),
-       .JALR       (de_ex_inst.jalr),
-       .BRANCH     (de_ex_inst.branch),
-       .JAL        (de_ex_inst.jump),
+       .JALR       (jalr),
+       .BRANCH     (branch),
+       .JAL        (jump),
        .MTVEC      (),
        .MEPC       (),
        .PC_OUT     (pc),
@@ -303,7 +303,7 @@ end
         .func3      (de_ex_inst.mem_type),
         .opcode     (de_ex_inst.opcode),
         .PC_SOURCE  (BCG_PC_SOURCE),
-        .branch     (BCG_branch)
+        .branch     (BR_EN)
     );
         
     // Instantiate Branch Address Generator
@@ -313,9 +313,9 @@ end
         .J_TYPE     (de_ex_inst.J_type),
         .B_TYPE     (de_ex_inst.B_type),
         .FROM_PC    (de_ex_pc), //?
-        .JAL        (de_ex_inst.jump),
-        .BRANCH     (de_ex_inst.branch),
-        .JALR       (de_ex_inst.jalr)  
+        .JAL        (jump),
+        .BRANCH     (branch),
+        .JALR       (jalr)  
     );
     
     // Instantiate Hazard MUX A
