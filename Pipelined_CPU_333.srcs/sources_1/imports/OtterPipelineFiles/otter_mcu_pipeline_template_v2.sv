@@ -199,7 +199,8 @@ end
         .ForwardB       (ForwardB),
         .stall          (stall),
         .flush          (flush),
-        .opcode         (de_inst.opcode)
+        .opcode         (de_inst.opcode),
+        .de_ex_rf_wr_sel      (de_ex_inst.rf_wr_sel)
     );
 
 //==== End of Hazard Detection ===========================================

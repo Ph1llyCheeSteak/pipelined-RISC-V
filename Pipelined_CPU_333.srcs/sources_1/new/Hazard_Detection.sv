@@ -26,6 +26,7 @@ module Hazard_Detection(
     input stalled2,
     input [2:0] pcSource,
     input [6:0] opcode,
+    input [2:0] de_ex_rf_wr_sel,
     output reg [1:0] ForwardA, 
     output reg [1:0] ForwardB,
     output reg stall, 
@@ -61,7 +62,7 @@ module Hazard_Detection(
         //if((memRead2 && !stalled && de_ex_rd_used && ((de_rs1_used && rs1_d == id_ex_rd) || (de_rs2_used && rs2_d == id_ex_rd)))) begin
         //    stall = 1'b1;
         //end
-        if((opcode == 7'b0000011) && !stalled && ((de_rs1_used && rs1_d == id_ex_rd) || (de_rs2_used && rs2_d == id_ex_rd))) begin
+        if(de_ex_rf_wr_sel == 2'b10 && !stalled && ((de_rs1_used && rs1_d == id_ex_rd) || (de_rs2_used && rs2_d == id_ex_rd))) begin
             stall = 1'b1;
         end
         

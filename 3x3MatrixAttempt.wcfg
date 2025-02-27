@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="251.250 ns"></ZoomStartTime>
-      <ZoomEndTime time="483.751 ns"></ZoomEndTime>
-      <Cursor1Time time="362.650 ns"></Cursor1Time>
+      <ZoomStartTime time="50,011.084 ns"></ZoomStartTime>
+      <ZoomEndTime time="50,244.585 ns"></ZoomEndTime>
+      <Cursor1Time time="50,081.084 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="271"></NameColumnWidth>
+      <NameColumnWidth column_width="261"></NameColumnWidth>
       <ValueColumnWidth column_width="146"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
+   <WVObjectSize size="13" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -62,14 +62,6 @@
       <obj_property name="ElementShortName">[1][31:0]</obj_property>
       <obj_property name="ObjectShortName">[1][31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/ForwardA" type="array">
-      <obj_property name="ElementShortName">ForwardA[1:0]</obj_property>
-      <obj_property name="ObjectShortName">ForwardA[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/ForwardB" type="array">
-      <obj_property name="ElementShortName">ForwardB[1:0]</obj_property>
-      <obj_property name="ObjectShortName">ForwardB[1:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/stall" type="logic">
       <obj_property name="ElementShortName">stall</obj_property>
       <obj_property name="ObjectShortName">stall</obj_property>
@@ -77,5 +69,9 @@
    <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/flush" type="logic">
       <obj_property name="ElementShortName">flush</obj_property>
       <obj_property name="ObjectShortName">flush</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/flushed" type="logic">
+      <obj_property name="ElementShortName">flushed</obj_property>
+      <obj_property name="ObjectShortName">flushed</obj_property>
    </wvobject>
 </wave_config>
