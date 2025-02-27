@@ -198,7 +198,8 @@ end
         .ForwardA       (ForwardA),
         .ForwardB       (ForwardB),
         .stall          (stall),
-        .flush          (flush)
+        .flush          (flush),
+        .opcode         (de_inst.opcode)
     );
 
 //==== End of Hazard Detection ===========================================
@@ -397,7 +398,7 @@ end
      
     FourMux regMux (
         .SEL   (mem_wb_inst.rf_wr_sel),
-        .ZERO  (next_pc), //mem_wb_next_pc?
+        .ZERO  (mem_wb_next_pc), //mem_wb_next_pc?
         .ONE   (0),
         .TWO   (mem_data),
         .THREE (mem_wb_aluRes),
