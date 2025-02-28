@@ -17,7 +17,7 @@ module BAG(
     output logic [31:0] BRANCH
     );
     
-    //Assign each branch address.
+    // Assign Branch Addresses
     assign JAL = FROM_PC + J_TYPE;
     assign JALR = I_TYPE + RS1;
     assign BRANCH = FROM_PC + B_TYPE;

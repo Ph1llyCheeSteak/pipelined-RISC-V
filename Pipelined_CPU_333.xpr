@@ -58,7 +58,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="46"/>
+    <Option Name="WTXSimLaunchSim" Val="343"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -107,15 +107,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/BCD.sv">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/BCD.sv"/>
-          <Attr Name="ImportTime" Val="1737670083"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/BCG.sv">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/BCG.sv"/>
@@ -134,19 +125,17 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv">
+      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/CathodeDriver.sv"/>
-          <Attr Name="ImportTime" Val="1737670083"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/FourMux.sv"/>
+          <Attr Name="ImportTime" Val="1737670084"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv">
+      <File Path="$PSRCDIR/sources_1/new/Hazard_Detection.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/FourMux.sv"/>
-          <Attr Name="ImportTime" Val="1737670084"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -197,19 +186,19 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/SevSegDisp.sv">
+      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/TwoMux.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/SevSegDisp.sv"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/TwoMux.sv"/>
           <Attr Name="ImportTime" Val="1737670084"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/TwoMux.sv">
+      <File Path="$PSRCDIR/sources_1/imports/Downloads/bram_dualport_pipeline.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/TwoMux.sv"/>
-          <Attr Name="ImportTime" Val="1737670084"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../Downloads/bram_dualport_pipeline.sv"/>
+          <Attr Name="ImportTime" Val="1737065896"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -224,9 +213,37 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/new/Otter_TB.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv">
         <FileInfo>
+          <Attr Name="UserDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/otter_memory_v1_07.sv"/>
+          <Attr Name="ImportTime" Val="1737670084"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv">
+        <FileInfo>
+          <Attr Name="UserDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/CathodeDriver.sv"/>
+          <Attr Name="ImportTime" Val="1737670083"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/SevSegDisp.sv">
+        <FileInfo>
+          <Attr Name="UserDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/SevSegDisp.sv"/>
           <Attr Name="ImportTime" Val="1737670084"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -235,27 +252,8 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv"/>
-          <Attr Name="ImportTime" Val="1737670084"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/OTTER.sv">
-        <FileInfo RelPath="OTTER.sv">
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/OTTER.sv"/>
-          <Attr Name="ImportTime" Val="1737670084"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/OTTER_Diego_Curiel/CU_FSM.sv">
-        <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/CU_FSM.sv"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../Diego_333_OTTER/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv"/>
           <Attr Name="ImportTime" Val="1737670084"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -278,14 +276,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/new/Otter_TB.sv">
-        <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/OTTER_Bakhirev_Weston/Matrix_Multiplier_Mem_10x10.mem">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -298,9 +288,37 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/Downloads/PipelineFirstTest.mem">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../Downloads/PipelineFirstTest.mem"/>
+          <Attr Name="ImportTime" Val="1738709390"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/Downloads/Pipeline_Week_2_Mem.mem">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../Downloads/Pipeline_Week_2_Mem.mem"/>
+          <Attr Name="ImportTime" Val="1739312443"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/NoHazardTestAll.mem">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/testAllWithHazards.mem">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="OTTER_Wrapper"/>
+        <Option Name="TopModule" Val="Otter_TB"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
     </FileSet>

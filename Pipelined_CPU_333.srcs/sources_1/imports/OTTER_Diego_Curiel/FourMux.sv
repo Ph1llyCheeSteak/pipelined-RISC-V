@@ -15,10 +15,9 @@ module FourMux(
     output logic [31:0] OUT
     );
     
-    //Create a generic, four-to-one MUX. To be used for the Reg File
-    //and the ALU.
+    // Generic Four To One MUX
     always_comb begin
-        case(SEL) //Case dependent on Select.
+        case(SEL) 
             2'b00: begin OUT = ZERO; end
             2'b01: begin OUT = ONE; end
             2'b10: begin OUT = TWO; end

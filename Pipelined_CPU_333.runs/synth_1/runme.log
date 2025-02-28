@@ -1,0 +1,219 @@
+
+*** Running vivado
+    with args -log OTTER_Wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source OTTER_Wrapper.tcl
+
+
+ECHO is off.
+ECHO is off.
+
+****** Vivado v2023.1 (64-bit)
+  **** SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+  **** IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+  **** SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source OTTER_Wrapper.tcl -notrace
+create_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 432.867 ; gain = 163.945
+Command: synth_design -top OTTER_Wrapper -part xc7a35ticpg236-1L
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Device 21-403] Loading part xc7a35ticpg236-1L
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 22784
+INFO: [Synth 8-11241] undeclared symbol 'pcWrite', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:95]
+INFO: [Synth 8-11241] undeclared symbol 'mem_rden1', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:96]
+INFO: [Synth 8-11241] undeclared symbol 'pc_int', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:99]
+INFO: [Synth 8-11241] undeclared symbol 'pc_sel', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:99]
+INFO: [Synth 8-11241] undeclared symbol 'mem_wb_rd_addr', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:149]
+INFO: [Synth 8-11241] undeclared symbol 'alu_src_a', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:155]
+INFO: [Synth 8-11241] undeclared symbol 'alu_src_b', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+INFO: [Synth 8-11241] undeclared symbol 'rf_wr_sel', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+INFO: [Synth 8-11241] undeclared symbol 'pc_write', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+INFO: [Synth 8-11241] undeclared symbol 'de_inst_pc', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:169]
+INFO: [Synth 8-11241] undeclared symbol 'de_ex_inst_opA', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+INFO: [Synth 8-11241] undeclared symbol 'de_ex_inst_opB', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+INFO: [Synth 8-11241] undeclared symbol 'de_ex_inst_alu_fun', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+INFO: [Synth 8-11241] undeclared symbol 'pc_out', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:196]
+INFO: [Synth 8-11241] undeclared symbol 'jal', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+INFO: [Synth 8-11241] undeclared symbol 'jalr', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+INFO: [Synth 8-11241] undeclared symbol 'branch', assumed default net type 'wire' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 1247.406 ; gain = 410.887
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'OTTER_Wrapper' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv:17]
+INFO: [Synth 8-6157] synthesizing module 'OTTER_MCU' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:36]
+INFO: [Synth 8-6157] synthesizing module 'PC' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'PC_MUX' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_MUX.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'PC_MUX' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_MUX.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'PC_REG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_REG.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'PC_REG' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC_REG.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'PC' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/PC.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'Memory' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv:48]
+INFO: [Synth 8-3876] $readmem data file 'PipelineFirstTest.mem' is read successfully [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv:73]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv:95]
+INFO: [Synth 8-6155] done synthesizing module 'Memory' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/otter_memory_v1_07.sv:48]
+INFO: [Synth 8-6157] synthesizing module 'REG_FILE' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/REG_FILE.sv:10]
+INFO: [Synth 8-6155] done synthesizing module 'REG_FILE' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/REG_FILE.sv:10]
+INFO: [Synth 8-6157] synthesizing module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_DCDR.sv:9]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_DCDR.sv:135]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_DCDR.sv:161]
+INFO: [Synth 8-6155] done synthesizing module 'CU_DCDR' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CU_DCDR.sv:9]
+WARNING: [Synth 8-689] width (1) of port connection 'ALU_SRCB' does not match port width (2) of module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+WARNING: [Synth 8-689] width (1) of port connection 'PC_SOURCE' does not match port width (3) of module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+WARNING: [Synth 8-689] width (1) of port connection 'RF_WR_SEL' does not match port width (2) of module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:156]
+WARNING: [Synth 8-689] width (32) of port connection 'MEM_RDEN1' does not match port width (1) of module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:157]
+WARNING: [Synth 8-689] width (32) of port connection 'MEM_RDEN2' does not match port width (1) of module 'CU_DCDR' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:157]
+INFO: [Synth 8-6157] synthesizing module 'ImmediateGenerator' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ImmediateGenerator.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'ImmediateGenerator' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ImmediateGenerator.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'TwoMux' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/TwoMux.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'TwoMux' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/TwoMux.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'FourMux' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv:9]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv:21]
+INFO: [Synth 8-6155] done synthesizing module 'FourMux' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/FourMux.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'ALU' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ALU.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'ALU' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/ALU.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'BCG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BCG.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'BCG' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BCG.sv:9]
+INFO: [Synth 8-6157] synthesizing module 'BAG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BAG.sv:9]
+INFO: [Synth 8-6155] done synthesizing module 'BAG' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BAG.sv:9]
+WARNING: [Synth 8-689] width (1) of port connection 'JAL' does not match port width (32) of module 'BAG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+WARNING: [Synth 8-689] width (1) of port connection 'JALR' does not match port width (32) of module 'BAG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+WARNING: [Synth 8-689] width (1) of port connection 'BRANCH' does not match port width (32) of module 'BAG' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:197]
+INFO: [Synth 8-6155] done synthesizing module 'OTTER_MCU' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:36]
+WARNING: [Synth 8-7071] port 'INTR' of module 'OTTER_MCU' is unconnected for instance 'CPU' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv:48]
+WARNING: [Synth 8-7023] instance 'CPU' of module 'OTTER_MCU' has 7 connections declared, but only 6 given [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv:48]
+INFO: [Synth 8-6157] synthesizing module 'SevSegDisp' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/SevSegDisp.sv:21]
+INFO: [Synth 8-6157] synthesizing module 'BCD' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BCD.sv:18]
+INFO: [Synth 8-6155] done synthesizing module 'BCD' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/BCD.sv:18]
+INFO: [Synth 8-6157] synthesizing module 'CathodeDriver' [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:22]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:46]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:49]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:71]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:93]
+INFO: [Synth 8-226] default block is never used [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:115]
+INFO: [Synth 8-6155] done synthesizing module 'CathodeDriver' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/CathodeDriver.sv:22]
+INFO: [Synth 8-6155] done synthesizing module 'SevSegDisp' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/SevSegDisp.sv:21]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv:78]
+INFO: [Synth 8-6155] done synthesizing module 'OTTER_Wrapper' (0#1) [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OTTER_Diego_Curiel/OTTER_Wrapper_v1_02.sv:17]
+WARNING: [Synth 8-6014] Unused sequential element if_de_pc_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:92]
+WARNING: [Synth 8-6014] Unused sequential element de_ex_pc_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:141]
+WARNING: [Synth 8-6014] Unused sequential element de_ex_rs1_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:142]
+WARNING: [Synth 8-6014] Unused sequential element de_ex_rs2_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:143]
+WARNING: [Synth 8-6014] Unused sequential element de_ex_rd_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:144]
+WARNING: [Synth 8-6014] Unused sequential element de_ex_opcode_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:145]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_pc_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:173]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_rs1_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:174]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_rs2_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:175]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_rd_addr_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:176]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_opcode_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:177]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_opA_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:181]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_opB_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:182]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_rs1_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:183]
+WARNING: [Synth 8-6014] Unused sequential element ex_mem_alu_fun_reg was removed.  [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:185]
+WARNING: [Synth 8-3848] Net mem_wb_rd_addr in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:149]
+WARNING: [Synth 8-3848] Net de_ex_inst_opA in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+WARNING: [Synth 8-3848] Net de_ex_inst_opB in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+WARNING: [Synth 8-3848] Net de_ex_inst_alu_fun in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:190]
+WARNING: [Synth 8-3848] Net pc_jalr in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:44]
+WARNING: [Synth 8-3848] Net pc_branch in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:44]
+WARNING: [Synth 8-3848] Net pc_jal in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:44]
+WARNING: [Synth 8-3848] Net rs1 in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:45]
+WARNING: [Synth 8-3848] Net de_inst_pc in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:169]
+WARNING: [Synth 8-3848] Net pc_out in module/entity OTTER_MCU does not have driver. [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/sources_1/imports/OtterPipelineFiles/otter_mcu_pipeline_template_v2.sv:196]
+WARNING: [Synth 8-7129] Port MTVEC[31] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[30] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[29] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[28] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[27] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[26] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[25] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[24] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[23] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[22] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[21] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[20] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[19] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[18] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[17] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[16] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[15] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[14] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[13] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[12] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[11] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[10] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[9] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[8] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[7] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[6] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[5] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[4] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[3] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[2] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[1] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MTVEC[0] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[31] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[30] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[29] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[28] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[27] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[26] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[25] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[24] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[23] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[22] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[21] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[20] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[19] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[18] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[17] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[16] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[15] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[14] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[13] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[12] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[11] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[10] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[9] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[8] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[7] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[6] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[5] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[4] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[3] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[2] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[1] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port MEPC[0] in module PC_MUX is either unconnected or has no load
+WARNING: [Synth 8-7129] Port INTR in module OTTER_MCU is either unconnected or has no load
+WARNING: [Synth 8-7129] Port RESET in module OTTER_MCU is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:16 ; elapsed = 00:00:19 . Memory (MB): peak = 1353.305 ; gain = 516.785
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1353.305 ; gain = 516.785
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1353.305 ; gain = 516.785
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.051 . Memory (MB): peak = 1353.305 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/constrs_1/imports/OTTER_Diego_Curiel/Basys3_Master.xdc]
+Finished Parsing XDC File [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/constrs_1/imports/OTTER_Diego_Curiel/Basys3_Master.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/sam/Documents/GitHub/pipelined-RISC-V/Pipelined_CPU_333.srcs/constrs_1/imports/OTTER_Diego_Curiel/Basys3_Master.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/OTTER_Wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/OTTER_Wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1449.715 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 1449.715 ; gain = 0.000

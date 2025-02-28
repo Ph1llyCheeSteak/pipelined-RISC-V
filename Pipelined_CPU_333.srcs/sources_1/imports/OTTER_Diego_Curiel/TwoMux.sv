@@ -13,7 +13,7 @@ module TwoMux(
     output logic [31:0] OUT
     );
     
-    //Create a generic two-to-one MUX to be used for the ALU.
+    // Generic Two to One MUX
     always_comb begin
         case(SEL)
             1'b0: begin OUT = RS1; end
