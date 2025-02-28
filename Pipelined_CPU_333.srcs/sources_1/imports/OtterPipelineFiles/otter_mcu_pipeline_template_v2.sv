@@ -36,7 +36,7 @@ typedef struct packed{
     logic [1:0] rf_wr_sel;
     logic [2:0] mem_type;  //sign, size
     logic [31:0]U_immed, I_immed, S_immed, J_type, B_type;
-    logic [2:0] pc_sel;
+//    logic [2:0] pc_sel;
     logic [31:0] rs1;
 } instr_t;
 
@@ -57,9 +57,9 @@ module OTTER_MCU(input CLK,
     wire [31:0] jalr;
     wire [31:0] branch;
     wire [31:0] jump;
+    wire [2:0] PC_SEL;
     
     logic [31:0] pc, B_type, J_type, rs2;
-    logic [2:0]  BCG_PC_SOURCE;
     logic [1:0] ForwardA, ForwardB;
     logic br_lt,br_eq,br_ltu;
     logic stall, stalled, stalled2, flush, flushed;
@@ -87,15 +87,12 @@ module OTTER_MCU(input CLK,
 
               
 //==== Instruction Fetch ===========================================
-    logic [2:0] PCSOURCEIN;
-    assign BCG_PC_SOURCE = (BCG_PC_SOURCE) ? BR_EN: 2'b00;
-    assign PCSOURCEIN = de_ex_inst.pc_sel | BCG_PC_SOURCE;
        
     PC PC  (
        .CLK        (CLK),
        .RST        (RESET),
        .PC_WRITE   (pcWrite),
-       .PC_SEL     (PCSOURCEIN),
+       .PC_SEL     (PC_SEL),
        .JALR       (jalr),
        .BRANCH     (branch),
        .JAL        (jump),
@@ -173,34 +170,33 @@ end
     // Instantiate Hazard Unit
     Hazard_Detection Hazard_Detection_Unit(
         // RS1 AND RS2                      
-        .rs1_d          (de_inst.rs1_addr),
-        .rs2_d          (de_inst.rs2_addr),
-        .de_rs1_used    (de_inst.rs1_used), 
-        .de_rs2_used    (de_inst.rs2_used),
-        .rs1_e          (de_ex_inst.rs1_addr),
-        .rs2_e          (de_ex_inst.rs2_addr),
-        .de_ex_rs1_used (de_ex_inst.rs1_used),
-        .de_ex_rs2_used (de_ex_inst.rs2_used),
+        .rs1_d              (de_inst.rs1_addr),
+        .rs2_d              (de_inst.rs2_addr),
+        .de_rs1_used        (de_inst.rs1_used), 
+        .de_rs2_used        (de_inst.rs2_used),
+        .rs1_e              (de_ex_inst.rs1_addr),
+        .rs2_e              (de_ex_inst.rs2_addr),
+        .de_ex_rs1_used     (de_ex_inst.rs1_used),
+        .de_ex_rs2_used     (de_ex_inst.rs2_used),
         // RD 
-        .id_ex_rd       (de_ex_inst.rd_addr),
-        .de_ex_rd_used  (de_ex_inst.rd_used),
-        .mem_rd_used    (ex_mem_inst.rd_used),          
-        .wb_rd_used     (mem_wb_inst.rd_used),
-        .ex_mem_rd      (ex_mem_inst.rd_addr),
-        .mem_wb_rd      (mem_wb_inst.rd_addr),
+        .id_ex_rd           (de_ex_inst.rd_addr),
+        .mem_rd_used        (ex_mem_inst.rd_used),          
+        .wb_rd_used         (mem_wb_inst.rd_used),
+        .ex_mem_rd          (ex_mem_inst.rd_addr),
+        .mem_wb_rd          (mem_wb_inst.rd_addr),
         // OTHER
         .ex_mem_regWrite    (ex_mem_inst.regWrite),
         .mem_wb_regWrite    (mem_wb_inst.regWrite),
-        .memRead2       (de_ex_inst.memRead2),
-        .stalled        (stalled),
-        .stalled2       (stalled2),
-        .pcSource       (PCSOURCEIN),
-        .ForwardA       (ForwardA),
-        .ForwardB       (ForwardB),
-        .stall          (stall),
-        .flush          (flush),
-        .opcode         (de_inst.opcode),
-        .de_ex_rf_wr_sel      (de_ex_inst.rf_wr_sel)
+        .memRead2           (de_ex_inst.memRead2),
+        .stalled            (stalled),
+        .stalled2           (stalled2),
+        .pcSource           (PC_SEL),
+        .ForwardA           (ForwardA),
+        .ForwardB           (ForwardB),
+        .stall              (stall),
+        .flush              (flush),
+        .opcode             (de_inst.opcode),
+        .de_ex_rf_wr_sel    (de_ex_inst.rf_wr_sel)
     );
 
 //==== End of Hazard Detection ===========================================
@@ -216,7 +212,7 @@ end
         .ALU_FUN    (de_inst.alu_fun),
         .ALU_SRCA   (opA_sel),
         .ALU_SRCB   (opB_sel), 
-        .PC_SOURCE  (de_inst.pc_sel),
+//        .PC_SOURCE  (de_inst.pc_sel),
         .RF_WR_SEL  (de_inst.rf_wr_sel),
         .REG_WRITE  (de_inst.regWrite),
         .MEM_WRITE  (de_inst.memWrite),
@@ -304,7 +300,7 @@ end
         .RS2        (HazardBout),
         .func3      (de_ex_inst.mem_type),
         .opcode     (de_ex_inst.opcode),
-        .PC_SOURCE  (BCG_PC_SOURCE),
+        .PC_SOURCE  (PC_SEL),
         .branch     (BR_EN)
     );
         

@@ -25,6 +25,12 @@ module BCG(
     branch = 1'b0; 
     PC_SOURCE = 3'b000;
         case (opcode)
+            7'b1101111: begin // JAL
+                PC_SOURCE = 3'b011;
+            end
+            7'b1100111: begin // JALR
+                PC_SOURCE = 3'b001;
+            end
            7'b1100011: begin
                case(func3) 
                    3'b000: begin

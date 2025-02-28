@@ -17,7 +17,7 @@ module CU_DCDR(
     output logic [3:0] ALU_FUN,
     output logic ALU_SRCA,
     output logic [1:0] ALU_SRCB,
-    output logic [2:0] PC_SOURCE,
+//    output logic [2:0] PC_SOURCE,
     output logic [1:0] RF_WR_SEL,
     //NEW SHIT
     output logic REG_WRITE,
@@ -34,7 +34,7 @@ module CU_DCDR(
         ALU_FUN = 4'b0000;
         ALU_SRCA = 1'b0;
         ALU_SRCB = 2'b00;
-        PC_SOURCE = 3'b000;
+//        PC_SOURCE = 3'b000;
         RF_WR_SEL = 2'b00;
         //NEW SHIT
         REG_WRITE = 1'b0;
@@ -53,13 +53,9 @@ module CU_DCDR(
                 
             end
             7'b1101111: begin // JAL
-                PC_SOURCE = 3'b011;
-                //NEW SHIT
                 REG_WRITE = 1'b1;
             end
             7'b1100111: begin // JALR
-                PC_SOURCE = 3'b001;
-                //NEW SHIT
                 REG_WRITE = 1'b1;
             end
             7'b0100011: begin // Store Instructions
