@@ -2,7 +2,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 //
 // Engineer:  S. Weston & Phillipe Bakhirev
-// Module Name: PIPELINED_OTTER_CPU
+// Module Name: PIPELINED_OTTER_CPU WITH HAZARD HANDLING AND DATA FORWARDING
+// Create Date: 02/27/2025
 // Revision: 0.1
 //
 //////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +35,8 @@ typedef struct packed{
     logic regWrite;
     logic [31:0] pc;
     logic [1:0] rf_wr_sel;
-    logic [2:0] mem_type;  //sign, size
+    logic [2:0] mem_type;
     logic [31:0]U_immed, I_immed, S_immed, J_type, B_type;
-//    logic [2:0] pc_sel;
     logic [31:0] rs1;
 } instr_t;
 
@@ -49,41 +49,43 @@ module OTTER_MCU(input CLK,
                 output logic IOBUS_WR 
 );           
 
-    wire  [31:0] next_pc, aluBin, aluAin, aluResult, rfIn, mem_data;
-    wire [31:0] IR, HazardAout, HazardBout;
-    wire [1:0] opB_sel;
-    wire opA_sel;
-    wire BR_EN;
-    wire [31:0] jalr;
-    wire [31:0] branch;
-    wire [31:0] jump;
-    wire [2:0] PC_SEL;
-    
-    logic [31:0] pc, B_type, J_type, rs2;
-    logic [1:0] ForwardA, ForwardB;
-    logic br_lt,br_eq,br_ltu;
-    logic stall, stalled, stalled2, flush, flushed;
-    logic pcWrite, memRead1;
-    
+    wire    [31:0] next_pc, aluBin, aluAin, aluResult, rfIn, mem_data;
+    wire    [31:0] IR, HazardAout, HazardBout;
+    wire    [31:0] jalr, branch, jump;
+    wire    [2:0]  PC_SEL;
+    wire    [1:0]  opB_sel;
+    wire           opA_sel;
+    wire           BR_EN;
+
+    // Instruction Fetch
+    instr_t        de_ex_inst, de_inst, ex_mem_inst, mem_wb_inst;
+    logic   [31:0] pc, B_type, J_type, rs2;
+    logic   [31:0] if_de_pc;
+    logic   [31:0] if_de_next_pc;
+    logic   [1:0]  ForwardA, ForwardB;
+    logic          br_lt, br_eq, br_ltu;
+    logic          pcWrite, memRead1;
 
     // DE_EX
-    logic [31:0] de_ex_next_pc;
-    logic de_ex_opA_sel;
-    logic [1:0] de_ex_opB_sel;
-    logic [31:0] de_ex_rs2;
-    logic [31:0] de_ex_pc;
+    logic   [31:0] de_ex_pc;
+    logic   [31:0] de_ex_next_pc;
+    logic   [31:0] de_ex_rs2;
+    logic   [1:0]  de_ex_opB_sel;
+    logic          de_ex_opA_sel;
 
     // EX_MEM
-    instr_t ex_mem_inst;
-    logic [31:0] ex_mem_rs2;
-    logic [31:0] ex_mem_next_pc;
-    logic [31:0] ex_mem_HazardBout;
-    logic [31:0] ex_mem_aluRes;
+    logic   [31:0] ex_mem_next_pc;
+    logic   [31:0] ex_mem_rs2;
+    logic   [31:0] ex_mem_HazardBout;
+    logic   [31:0] ex_mem_aluRes;
     
     // MEM_WB
-    instr_t mem_wb_inst;
-    logic [31:0] mem_wb_aluRes;
-    logic [31:0] mem_wb_next_pc;
+    logic   [31:0] mem_wb_next_pc;
+    logic   [31:0] mem_wb_aluRes;
+
+    
+    // HAZARDS
+    logic          stall, stalled, stalled2, flush, flushed;
 
               
 //==== Instruction Fetch ===========================================
@@ -102,29 +104,25 @@ module OTTER_MCU(input CLK,
        .PC_OUT_INC (next_pc)
     );
 
-    logic [31:0] if_de_pc;
-    logic [31:0] if_de_next_pc;
-    instr_t de_ex_inst, de_inst;
-
     always_comb begin 
       if (stall == 1'b0) begin
-            pcWrite <= 1'b1;
-            memRead1 <= 1'b1;
+            pcWrite     <= 1'b1;
+            memRead1    <= 1'b1;
         end
         else begin
-            pcWrite <= 1'b0;
-            memRead1 <= 1'b0;
+            pcWrite     <= 1'b0;
+            memRead1    <= 1'b0;
         end
     end  
     
     always_ff @(posedge CLK) begin
         if(stall == 0) begin
-            if_de_pc <= pc;
-            if_de_next_pc <= next_pc; 
-            stalled <= 1'b0;
+            if_de_pc        <= pc;
+            if_de_next_pc   <= next_pc; 
+            stalled         <= 1'b0;
         end
         else if(stall == 1) begin
-            stalled <=1'b1;
+            stalled         <=1'b1;
         end   
     end
 
@@ -140,30 +138,27 @@ end
 //==== Decode ===========================================
     
     opcode_t OPCODE;
-    assign OPCODE = opcode_t'(IR[6:0]); //assign OPCODE_t = opcode_t'(opcode);
-    
+    assign OPCODE = opcode_t'(IR[6:0]);
     assign de_inst.rs1_addr=IR[19:15];
     assign de_inst.rs2_addr=IR[24:20];
     assign de_inst.rd_addr=IR[11:7];
     assign de_inst.opcode=OPCODE;
-    
     assign de_inst.mem_type=IR[14:12];
 
 //==== Hazard Detection ===========================================
-   wire  BCGMUXSelA, BCGMUXSelB;
    
-    assign de_inst.rs1_used=    de_inst.rs1_addr != 0    
+    assign de_inst.rs1_used=    de_inst.rs1_addr  != 0    
                                 && de_inst.opcode != LUI 
                                 && de_inst.opcode != AUIPC
                                 && de_inst.opcode != JAL;
     
-    assign de_inst.rs2_used=    de_inst.rs2_addr != 0   
+    assign de_inst.rs2_used=    de_inst.rs2_addr  != 0   
                                 && de_inst.opcode != OP_IMM
                                 && de_inst.opcode != LUI
                                 && de_inst.opcode != AUIPC
                                 && de_inst.opcode != JAL;
                                 
-    assign de_inst.rd_used=     de_inst.rd_addr != 0    
+    assign de_inst.rd_used=     de_inst.rd_addr   != 0    
                                 && de_inst.opcode != BRANCH 
                                 && de_inst.opcode != STORE;
                                 
@@ -211,8 +206,7 @@ end
         .BR_LTU     (br_ltu),
         .ALU_FUN    (de_inst.alu_fun),
         .ALU_SRCA   (opA_sel),
-        .ALU_SRCB   (opB_sel), 
-//        .PC_SOURCE  (de_inst.pc_sel),
+        .ALU_SRCB   (opB_sel),
         .RF_WR_SEL  (de_inst.rf_wr_sel),
         .REG_WRITE  (de_inst.regWrite),
         .MEM_WRITE  (de_inst.memWrite),
@@ -220,7 +214,7 @@ end
     );
     
     // Instantiate Immediate Generator
-    ImmediateGenerator immgen(
+    ImmediateGenerator ImmGen(
         .IR     (IR[31:7]),
         .U_TYPE (de_inst.U_immed),
         .I_TYPE (de_inst.I_immed),
@@ -230,7 +224,7 @@ end
     );
 
     // Instantiate Register
-    REG_FILE regfile(
+    REG_FILE RegFile(
         .CLK    (CLK),
         .EN     (mem_wb_inst.regWrite),
         .ADR1   (de_inst.rs1_addr),
@@ -243,44 +237,44 @@ end
 
 	always_ff @ (posedge CLK) begin
 	    if(flush) begin
-	   	    de_ex_inst <= 0;
+            de_ex_inst      <= 0;
 
-            de_ex_opA_sel <= 0;
-            de_ex_opB_sel <= 0;
-            de_ex_rs2 <= 0;
+            de_ex_opA_sel   <= 0;
+            de_ex_opB_sel   <= 0;
+            de_ex_rs2       <= 0;
                
-            de_ex_next_pc <= 0;
-            de_ex_pc <= 0;
-            flushed <= 1;
+            de_ex_next_pc   <= 0;
+            de_ex_pc        <= 0;
+            flushed         <= 1;
 	    end
 	    else if(flushed) begin
-	        de_ex_inst <= 0;
+            de_ex_inst      <= 0;
                
-            de_ex_opA_sel <= 0;
-            de_ex_opB_sel <= 0;
-            de_ex_rs2 <= 0;
+            de_ex_opA_sel   <= 0;
+            de_ex_opB_sel   <= 0;
+            de_ex_rs2       <= 0;
               
-            de_ex_next_pc <= 0;
-            de_ex_pc <= 0; 
-            flushed <= 0;
+            de_ex_next_pc   <= 0;
+            de_ex_pc        <= 0; 
+            flushed         <= 0;
         end     
         else if(stall) begin
-	        de_ex_inst <= de_ex_inst;      
-            de_ex_rs2 <= de_ex_rs2;
-            de_ex_pc <= de_ex_pc;	       
+            de_ex_inst      <= de_ex_inst;      
+            de_ex_rs2       <= de_ex_rs2;
+            de_ex_pc        <= de_ex_pc;	       
                
-            de_ex_opA_sel <= de_ex_opA_sel;
-            de_ex_opB_sel <= de_ex_opB_sel;
-            de_ex_next_pc <= de_ex_next_pc;
+            de_ex_opA_sel   <= de_ex_opA_sel;
+            de_ex_opB_sel   <= de_ex_opB_sel;
+            de_ex_next_pc   <= de_ex_next_pc;
 	    end
 	    else begin
-            de_ex_inst <= de_inst;
-            de_ex_rs2 <= rs2;
+            de_ex_inst      <= de_inst;
+            de_ex_rs2       <= rs2;
              
-            de_ex_opA_sel <= opA_sel;
-            de_ex_opB_sel <= opB_sel;	       
-            de_ex_next_pc <= if_de_next_pc;
-            de_ex_pc <= if_de_pc;
+            de_ex_opA_sel   <= opA_sel;
+            de_ex_opB_sel   <= opB_sel;	       
+            de_ex_next_pc   <= if_de_next_pc;
+            de_ex_pc        <= if_de_pc;
 	    end
 	end
 
@@ -310,7 +304,7 @@ end
         .I_TYPE     (de_ex_inst.I_immed),
         .J_TYPE     (de_ex_inst.J_type),
         .B_TYPE     (de_ex_inst.B_type),
-        .FROM_PC    (de_ex_pc), //?
+        .FROM_PC    (de_ex_pc),
         .JAL        (jump),
         .BRANCH     (branch),
         .JALR       (jalr)  
@@ -337,7 +331,7 @@ end
     );
 
     // Instantiate ALU MUX A
-    TwoMux muxAluA  (
+    TwoMux AluMuxA  (
         .SEL        (de_ex_opA_sel),   
         .RS1        (HazardAout),
         .U_TYPE     (de_ex_inst.U_immed),
@@ -345,7 +339,7 @@ end
     );
 
     // Instantiate ALU MUX B   
-    FourMux muxAluB (
+    FourMux AluMuxB (
         .SEL    (de_ex_opB_sel),
         .ZERO   (HazardBout),
         .ONE    (de_ex_inst.I_immed),
@@ -356,22 +350,22 @@ end
 
     always_ff @ (posedge CLK) begin  
         begin
-            ex_mem_inst <= de_ex_inst;
-            ex_mem_rs2 <= de_ex_rs2;
-            ex_mem_aluRes <= aluResult;
-            ex_mem_next_pc <= de_ex_next_pc;
-            ex_mem_HazardBout <= HazardBout;
+            ex_mem_inst         <= de_ex_inst;
+            ex_mem_rs2          <= de_ex_rs2;
+            ex_mem_aluRes       <= aluResult;
+            ex_mem_next_pc      <= de_ex_next_pc;
+            ex_mem_HazardBout   <= HazardBout;
         end
     end
 
 //==== Memory ======================================================
 
-    OTTER_mem_byte Memdual (
+    OTTER_mem_byte Memory (
         .MEM_CLK    (CLK),
-        .MEM_READ1  (memRead1),  //IF
+        .MEM_READ1  (memRead1),
         .MEM_READ2  (ex_mem_inst.memRead2),
         .MEM_WRITE2 (ex_mem_inst.memWrite),        
-        .MEM_ADDR1  (pc),  //IF.
+        .MEM_ADDR1  (pc),
         .MEM_ADDR2  (ex_mem_aluRes),          
         .MEM_DIN2   (ex_mem_HazardBout),
         .MEM_SIZE   (ex_mem_inst.mem_type[1:0]),     
@@ -387,18 +381,20 @@ end
     assign IOBUS_OUT = ex_mem_rs2;
 
     always_ff @ (posedge CLK) begin
-        mem_wb_inst <= ex_mem_inst;
-        mem_wb_next_pc <= ex_mem_next_pc;
-        mem_wb_aluRes <= ex_mem_aluRes;
+        mem_wb_inst     <= ex_mem_inst;
+        mem_wb_next_pc  <= ex_mem_next_pc;
+        mem_wb_aluRes   <= ex_mem_aluRes;
     end
+    
 //==== Write Back ==================================================
      
-    FourMux regMux (
+    FourMux RegMux (
         .SEL   (mem_wb_inst.rf_wr_sel),
-        .ZERO  (mem_wb_next_pc), //mem_wb_next_pc?
+        .ZERO  (mem_wb_next_pc),
         .ONE   (0),
         .TWO   (mem_data),
         .THREE (mem_wb_aluRes),
         .OUT   (rfIn)  
     );
+    
 endmodule

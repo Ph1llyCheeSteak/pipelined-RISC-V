@@ -15,7 +15,7 @@ module ImmediateGenerator(
     output logic [31:0] J_TYPE
     );
     
-    //Assign each immediate value. 
+    // Assign Immediate Values
     assign I_TYPE = {{21{IR[24]}}, IR[23:18], IR[17:13]};
     assign S_TYPE = {{21{IR[24]}}, IR[23:18], IR[4:0]};
     assign B_TYPE = {{20{IR[24]}}, IR[0], IR[23:18], IR[4:1], 1'b0};

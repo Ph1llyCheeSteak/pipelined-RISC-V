@@ -38,32 +38,32 @@ module Hazard_Detection(
         stall = 1'b0; 
         flush = 1'b0; 
         
-        // conditions for forwarding A
-        // RAW 1 inst above
-        if((rs1_e == ex_mem_rd) && ex_mem_regWrite && de_ex_rs1_used && mem_rd_used && !stalled2) begin // need more?
+        // Conditions for forwarding A
+        // RAW, 1 inst above
+        if((rs1_e == ex_mem_rd) && ex_mem_regWrite && de_ex_rs1_used && mem_rd_used && !stalled2) begin
             ForwardA = 2'b10;
         end 
-        // RAW 2 inst above
+        // RAW, 2 inst above
         else if(((rs1_e == mem_wb_rd) && mem_wb_regWrite) && de_ex_rs1_used && wb_rd_used) begin
             ForwardA = 2'b01;
         end        
         
-        // conditions for forwarding B
-        // RAW 1 inst above
-        if(((rs2_e == ex_mem_rd) && ex_mem_regWrite) && de_ex_rs2_used && mem_rd_used && !stalled2) begin // need more?
+        // Conditions for forwarding B
+        // RAW, 1 inst above
+        if(((rs2_e == ex_mem_rd) && ex_mem_regWrite) && de_ex_rs2_used && mem_rd_used && !stalled2) begin
             ForwardB = 2'b10;
         end
-        // RAW 2 inst above
+        // RAW, 2 inst above
         else if(((rs2_e == mem_wb_rd) && mem_wb_regWrite) && de_ex_rs2_used && wb_rd_used)begin
             ForwardB = 2'b01;
         end
         
-        // conditions for stall
+        // Conditions for stall
         if(de_ex_rf_wr_sel == 2'b10 && !stalled && ((de_rs1_used && rs1_d == id_ex_rd) || (de_rs2_used && rs2_d == id_ex_rd))) begin
             stall = 1'b1;
         end
         
-        // conditions for flush
+        // Conditions for flush
         if(pcSource != 0) begin
             flush = 1'b1;
         end
