@@ -12,15 +12,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.159942500 ms"></ZoomStartTime>
-      <ZoomEndTime time="0.160047501 ms"></ZoomEndTime>
-      <Cursor1Time time="0.160030000 ms"></Cursor1Time>
+      <ZoomStartTime time="21.416 ns"></ZoomStartTime>
+      <ZoomEndTime time="542.117 ns"></ZoomEndTime>
+      <Cursor1Time time="153.916 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="261"></NameColumnWidth>
-      <ValueColumnWidth column_width="130"></ValueColumnWidth>
+      <NameColumnWidth column_width="331"></NameColumnWidth>
+      <ValueColumnWidth column_width="148"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="12" />
    <wvobject fp_name="/Otter_TB/CPU/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -30,25 +30,45 @@
       <obj_property name="ObjectShortName">pc[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/if_de_pc" type="array">
+      <obj_property name="ElementShortName">if_de_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">if_de_pc[31:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/Otter_TB/CPU/de_ex_pc" type="array">
       <obj_property name="ElementShortName">de_ex_pc[31:0]</obj_property>
       <obj_property name="ObjectShortName">de_ex_pc[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/BCG/opcode" type="array">
-      <obj_property name="ElementShortName">opcode[6:0]</obj_property>
-      <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/OPCODE" type="array">
+      <obj_property name="ElementShortName">OPCODE[6:0]</obj_property>
+      <obj_property name="ObjectShortName">OPCODE[6:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/stall" type="logic">
+   <wvobject fp_name="/Otter_TB/CPU/stall" type="logic">
       <obj_property name="ElementShortName">stall</obj_property>
       <obj_property name="ObjectShortName">stall</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/Hazard_Detection_Unit/flush" type="logic">
-      <obj_property name="ElementShortName">flush</obj_property>
-      <obj_property name="ObjectShortName">flush</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/stalled" type="logic">
+      <obj_property name="ElementShortName">stalled</obj_property>
+      <obj_property name="ObjectShortName">stalled</obj_property>
    </wvobject>
-   <wvobject fp_name="/Otter_TB/CPU/flushed" type="logic">
-      <obj_property name="ElementShortName">flushed</obj_property>
-      <obj_property name="ObjectShortName">flushed</obj_property>
+   <wvobject fp_name="/Otter_TB/CPU/stalled2" type="logic">
+      <obj_property name="ElementShortName">stalled2</obj_property>
+      <obj_property name="ObjectShortName">stalled2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/RegFile/ram[5]" type="array">
+      <obj_property name="ElementShortName">[5][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/RegFile/ram[6]" type="array">
+      <obj_property name="ElementShortName">[6][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/PC/PC_WRITE" type="logic">
+      <obj_property name="ElementShortName">PC_WRITE</obj_property>
+      <obj_property name="ObjectShortName">PC_WRITE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/Otter_TB/CPU/de_ex_inst.regWrite" type="logic">
+      <obj_property name="ElementShortName">.regWrite</obj_property>
+      <obj_property name="ObjectShortName">.regWrite</obj_property>
    </wvobject>
 </wave_config>

@@ -25,7 +25,7 @@ module Hazard_Detection(
     input stalled2,
     input [2:0] pcSource,
     input [6:0] opcode,
-    input [2:0] de_ex_rf_wr_sel,
+    input [1:0] de_ex_rf_wr_sel,
     output reg [1:0] ForwardA, 
     output reg [1:0] ForwardB,
     output reg stall, 

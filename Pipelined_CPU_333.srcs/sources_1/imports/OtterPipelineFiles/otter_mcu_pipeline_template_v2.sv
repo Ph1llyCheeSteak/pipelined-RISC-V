@@ -107,16 +107,16 @@ module OTTER_MCU(input CLK,
     always_comb begin 
       if (stall == 1'b0) begin
             pcWrite     <= 1'b1;
-            memRead1    <= 1'b1;
+            memRead1    <= 1'b1; // works as enable on if de pipeline
         end
         else begin
             pcWrite     <= 1'b0;
-            memRead1    <= 1'b0;
+            memRead1    <= 1'b0; 
         end
     end  
     
     always_ff @(posedge CLK) begin
-        if(stall == 0) begin
+        if(stall == 0) begin 
             if_de_pc        <= pc;
             if_de_next_pc   <= next_pc; 
             stalled         <= 1'b0;
@@ -188,10 +188,10 @@ end
         .pcSource           (PC_SEL),
         .ForwardA           (ForwardA),
         .ForwardB           (ForwardB),
-        .stall              (stall),
-        .flush              (flush),
         .opcode             (de_inst.opcode),
-        .de_ex_rf_wr_sel    (de_ex_inst.rf_wr_sel)
+        .de_ex_rf_wr_sel    (de_ex_inst.rf_wr_sel),
+        .stall              (stall),
+        .flush              (flush)
     );
 
 //==== End of Hazard Detection ===========================================
@@ -259,13 +259,15 @@ end
             flushed         <= 0;
         end     
         else if(stall) begin
-            de_ex_inst      <= de_ex_inst;      
-            de_ex_rs2       <= de_ex_rs2;
-            de_ex_pc        <= de_ex_pc;	       
+            de_ex_inst.memWrite <= 0;
+            de_ex_inst.regWrite <= 0;
+//            de_ex_inst      <= de_ex_inst;      
+//            de_ex_rs2       <= de_ex_rs2;
+//            de_ex_pc        <= de_ex_pc;	       
                
-            de_ex_opA_sel   <= de_ex_opA_sel;
-            de_ex_opB_sel   <= de_ex_opB_sel;
-            de_ex_next_pc   <= de_ex_next_pc;
+//            de_ex_opA_sel   <= de_ex_opA_sel;
+//            de_ex_opB_sel   <= de_ex_opB_sel;
+//            de_ex_next_pc   <= de_ex_next_pc;
 	    end
 	    else begin
             de_ex_inst      <= de_inst;
@@ -315,7 +317,7 @@ end
        .ZERO        (de_ex_inst.rs1),     
        .ONE         (rfIn),
        .TWO         (ex_mem_aluRes),
-       .THREE       (31'b0),
+       .THREE       (32'b0),
        .SEL         (ForwardA),
        .OUT         (HazardAout)
     );
@@ -325,7 +327,7 @@ end
        .ZERO        (de_ex_rs2),
        .ONE         (rfIn),
        .TWO         (ex_mem_aluRes),
-       .THREE       (31'b0),
+       .THREE       (32'b0),
        .SEL         (ForwardB),
        .OUT         (HazardBout)
     );
